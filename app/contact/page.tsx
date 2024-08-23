@@ -31,7 +31,7 @@ export default function Contact() {
         <CardHeader>
           <h1 className="text-white text-4xl font-bold">Contact</h1>
           <h2 className="text-white text-xl">
-            Reach out! Let's work on something together.
+            Reach out! Let&apos;s work on something together.
           </h2>
           <div>
             <Button className="mb-2.5" onClick={copyEmail}>
