@@ -30,7 +30,7 @@ function Navbar() {
               </Button>
             </Link>
             <Button variant="ghost" className="ml-auto">
-              <SunIcon className="w-6 h-6" />
+              <SunIcon className="w-4 h-4" />
             </Button>
           </CardTitle>
         </CardHeader>
