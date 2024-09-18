@@ -7,16 +7,22 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { getProjects } from "@/server/queries";
+import Link from "next/link";
 
 export default async function Projects() {
   const projects = await getProjects();
   return (
     <main className="bg-zinc-950 dark flex justify-start items-center h-full">
-      <Card className="w-[97vw] h-[88vh] flex flex-col justify-start mx-auto items-center">
+      <Card className="w-[97vw] h-[88vh] flex flex-col justify-start mx-auto items-center overflow-scroll">
         {projects.map((project) => (
-          <Card key={project.id} className="w-[95vw] mt-[2vh]">
+          <Card key={project.id} className="w-[95vw] mt-3 mb-3">
             <CardHeader>
-              <h1 className="text-white text-4xl font-bold">{project.title}</h1>
+              <Link
+                href={"projects/" + project.id}
+                className="text-white text-4xl font-bold"
+              >
+                {project.title}
+              </Link>
               <div>
                 {project.tags.map((tag) => (
                   <Badge key={tag}>{tag}</Badge>
@@ -33,7 +39,7 @@ export default async function Projects() {
                   </div>
                   <img
                     src={project.image}
-                    className="rounded-t-lg max-w-[32vw] max-h-[25vh]"
+                    className="rounded-t-lg max-w-[32vw] max-h-[32vh]"
                   />
                 </div>
               </div>

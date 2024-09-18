@@ -8,6 +8,7 @@ export const projectsTable = pgTable('projects_table', {
   image: text('image').notNull(),
   tags: text('tags').array().notNull().default(sql`'{}'::text[]`),
   description: text('description').notNull(),
+  extendedDescription: text('extended_description').notNull(),
 });
 
 export const blogsTable = pgTable('blog_table', {
