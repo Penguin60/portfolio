@@ -1,5 +1,5 @@
 import Navbar from "@/components/navbar";
-
+import { ThemeProvider } from "@/components/theme-provider";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -22,11 +22,18 @@ export default function RootLayout({
     <html lang="en" className="h-full">
       <CSPostHogProvider>
         <body className={`flex flex-col h-screen ${inter.className}`}>
-          <Navbar />
-          <main className="h-full dark">
-            {children}
-            <Toaster />
-          </main>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <Navbar />
+            <main className="h-full">
+              {children}
+              <Toaster />
+            </main>
+          </ThemeProvider>
         </body>
       </CSPostHogProvider>
     </html>

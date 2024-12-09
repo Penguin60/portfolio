@@ -26,11 +26,11 @@ export default function Contact() {
   }
 
   return (
-    <main className="bg-zinc-950 dark items-center flex justify-center h-full">
+    <main className="bg-white dark:bg-zinc-950 text-black dark:text-white items-center flex justify-center h-full">
       <Card className="w-[97vw] h-[88vh] flex">
         <CardHeader>
-          <h1 className="text-white text-4xl font-bold">Contact</h1>
-          <h2 className="text-white text-xl">
+          <h1 className="text-black dark:text-white text-4xl font-bold">Contact</h1>
+          <h2 className="text-black dark:text-white text-xl">
             Reach out! Let&apos;s work on something together.
           </h2>
           <div>

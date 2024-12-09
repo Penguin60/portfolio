@@ -12,20 +12,20 @@ import Link from "next/link";
 export default async function Projects() {
   const projects = await getProjects();
   return (
-    <main className="bg-zinc-950 dark flex justify-start items-center h-full">
+    <main className="bg-white dark:bg-zinc-950 text-black dark:text-white flex justify-start items-center h-full">
       <Card className="w-[97vw] h-[88vh] flex flex-col justify-start mx-auto items-center overflow-scroll">
         {projects.map((project) => (
           <Card key={project.id} className="w-[95vw] mt-3 mb-3">
             <CardHeader>
               <Link
                 href={"projects/" + project.id}
-                className="text-white text-4xl font-bold"
+                className="text-black dark:text-white text-4xl font-bold"
               >
                 {project.title}
               </Link>
               <div>
                 {project.tags.map((tag) => (
-                  <Badge key={tag}>{tag}</Badge>
+                  <Badge key={tag} className="mr-0.5">{tag}</Badge>
                 ))}
               </div>
             </CardHeader>
@@ -33,7 +33,7 @@ export default async function Projects() {
               <div>
                 <div className="flex justify-between items-start">
                   <div className="flex-1 text-left">
-                    <h2 className="text-white text-lg max-w-[30vw]">
+                    <h2 className="text-black dark:text-white text-lg max-w-[30vw]">
                       {project.description}
                     </h2>
                   </div>
