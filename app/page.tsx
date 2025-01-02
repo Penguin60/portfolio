@@ -20,11 +20,11 @@ export default async function Home() {
               <AvatarFallback>RR</AvatarFallback>
             </Avatar>
             <p className="ml-3 text-lg">
-              <strong>Hey there</strong>, I'm <strong>Radean</strong>
+              <strong>Hey there</strong>, I&apos;m <strong>Radean</strong>
             </p>
           </div>
           <p className="m-8 mt-0 text-lg">
-            I’m a 10th grade IB student with a passion for{" "}
+            I&apos;m a 10th grade IB student with a passion for{" "}
             <strong>programming</strong>, <strong>robotics</strong> and{" "}
             <strong>mathematics</strong>.
           </p>
@@ -37,7 +37,7 @@ export default async function Home() {
             !
           </p>
           <p className="m-8 mt-0 text-lg">
-            When I’m not coding, you’ll find me <strong>reading</strong>,
+            When I&apos;m not coding, you&apos;ll find me <strong>reading</strong>,
             playing <strong>tennis</strong> or cramming for exams.
           </p>
           <div className="m-8 mt-auto">
