@@ -1,0 +1,4 @@
+#penguin {
+    position: absolute;
+    transition: top 2s, left 2s;
+  }

@@ -1,6 +1,9 @@
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { getProjects } from "@/server/queries";
+import dynamic from 'next/dynamic';
+
+const Penguin = dynamic(() => import('@/components/Penguin'), { ssr: false });
 
 export default async function Home() {
   const projects = await getProjects();
@@ -12,7 +15,7 @@ export default async function Home() {
 
   return (
     <main className="bg-white dark:bg-zinc-950 text-black dark:text-white items-center flex justify-center h-full">
-      <Card className="w-[97vw] h-[88vh] flex">
+      <Card id="card" className="relative w-[97vw] h-[88vh] flex overflow-hidden">
         <div className="flex flex-col w-full h-full">
           <div className="m-8 flex items-center">
             <Avatar className="w-14 h-14">
@@ -44,6 +47,7 @@ export default async function Home() {
             <h1 className="text-5xl font-bold">{formatCount(projectsCount)}</h1>
             <p className="mt-1">Projects created</p>
           </div>
+          <Penguin />
         </div>
       </Card>
     </main>
