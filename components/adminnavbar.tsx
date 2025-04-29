@@ -7,7 +7,7 @@ import Link from "next/link";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
-function Navbar() {
+function AdminNavbar() {
   const { theme, setTheme } = useTheme();
   const [isDarkMode, setIsDarkMode] = useState(false);
 
@@ -25,29 +25,14 @@ function Navbar() {
       <Card className="w-[97vw] h-16 flex flex-col justify-center mt-5">
         <CardHeader>
           <CardTitle className="flex items-center">
-            <Link href="/dean" className="font-bold">
+            <Link href="/admin" className="font-bold">
               <Button variant="ghost" className="w-16">
-                Home
+                Admin Home
               </Button>
             </Link>
-            <Link href="/dean/projects" className="font-bold">
-              <Button variant="ghost" className="w-16">
-                Projects
-              </Button>
-            </Link>
-            <Link href="/dean/blog" className="font-bold">
+            <Link href="/admin/blog" className="font-bold">
               <Button variant="ghost" className="w-16">
                 Blog
-              </Button>
-            </Link>
-            <Link href="/dean/contact" className="font-bold">
-              <Button variant="ghost" className="w-16">
-                Contact
-              </Button>
-            </Link>
-            <Link href="/dean/credits" className="font-bold">
-              <Button variant="ghost" className="w-16">
-                Credits
               </Button>
             </Link>
             <div className="ml-auto">
@@ -64,4 +49,4 @@ function Navbar() {
   );
 }
 
-export default Navbar;
+export default AdminNavbar;

@@ -18,7 +18,7 @@ export default async function ProjectPage({ params }: PageParams) {
   const project = projects[0];
 
   return (
-    <main className="bg-white dark:bg-zinc-950 text-black dark:text-white items-center flex justify-center h-full">
+    <main className="bg-white dark:bg-zinc-950 text-black dark:text-white items-center flex justify-center h-full mt-3">
       <Card className="w-[97vw] h-[88vh] flex-col justify-start mx-auto items-center">
         <CardHeader>
           <a href={project.link} className="text-black dark:text-white text-4xl font-bold">

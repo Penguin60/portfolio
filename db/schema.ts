@@ -14,6 +14,8 @@ export const projectsTable = pgTable('projects_table', {
 export const blogsTable = pgTable('blog_table', {
   id: serial('id').primaryKey(),
   title: text('title').notNull(),
+  tags: text('tags').array().notNull().default(sql`'{}'::text[]`),
+  description: text('description').notNull(),
   content: text('content').notNull(),
   createdAt: timestamp('created_at').notNull().defaultNow(),
 });

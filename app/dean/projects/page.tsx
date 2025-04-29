@@ -3,8 +3,6 @@ import {
   Card,
   CardHeader,
   CardContent,
-  CardDescription,
-  CardFooter,
 } from "@/components/ui/card";
 import { getProjects } from "@/server/queries";
 import Link from "next/link";
@@ -12,7 +10,7 @@ import Link from "next/link";
 export default async function Projects() {
   const projects = await getProjects();
   return (
-    <main className="bg-white dark:bg-zinc-950 text-black dark:text-white flex justify-start items-center h-full">
+    <main className="bg-white dark:bg-zinc-950 text-black dark:text-white flex justify-start items-center h-full mt-3">
       <Card className="w-[97vw] h-[88vh] flex flex-col justify-start mx-auto items-center overflow-scroll">
         {projects.map((project) => (
           <Card key={project.id} className="w-[95vw] mt-3 mb-3">
