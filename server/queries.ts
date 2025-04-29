@@ -25,6 +25,16 @@ export async function getProjectsTags() {
     return uniqueTags;
 }
 
+export async function getBlogs() {
+    const blogs = await db.query.blogsTable.findMany();
+    return blogs;
+}
+
+export async function getBlog(id: number) {
+    const blog = await db.select().from(blogsTable).where(eq(blogsTable.id, id))
+    return blog;
+}
+
 export async function getBlogsTags() {
     const blogs = await db.query.blogsTable.findMany({
         columns: {

@@ -35,7 +35,7 @@ function Navbar() {
                 Projects
               </Button>
             </Link>
-            <Link href="/dean/blog" className="font-bold">
+            <Link href="/dean/blogs" className="font-bold">
               <Button variant="ghost" className="w-16">
                 Blog
               </Button>

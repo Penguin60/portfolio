@@ -27,7 +27,12 @@ function AdminNavbar() {
           <CardTitle className="flex items-center">
             <Link href="/admin" className="font-bold">
               <Button variant="ghost" className="w-16">
-                Admin Home
+                Admin
+              </Button>
+            </Link>
+            <Link href="/admin/projects" className="font-bold">
+              <Button variant="ghost" className="w-16">
+                Projects
               </Button>
             </Link>
             <Link href="/admin/blog" className="font-bold">

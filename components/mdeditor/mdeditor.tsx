@@ -13,6 +13,7 @@ import {
   DialogTrigger,
   DialogHeader,
   DialogTitle,
+  DialogClose,
 } from "../ui/dialog";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -47,6 +48,8 @@ export function MarkdownEditor({
   const [localOptions, setLocalOptions] = useState<string[]>(options);
   const [tags, setTags] = useState<string[]>([]);
   const [description, setDescription] = useState("");
+  const [link, setLink] = useState("");
+  const [image, setImage] = useState("");
 
   function updateText(e: React.ChangeEvent<HTMLTextAreaElement>) {
     setText(e.target.value);
@@ -58,6 +61,14 @@ export function MarkdownEditor({
 
   const updateDescription = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setDescription(e.target.value);
+  };
+
+  const updateLink = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setLink(e.target.value);
+  };
+
+  const updateImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setImage(e.target.value);
   };
 
   async function populatePreview() {
@@ -480,24 +491,49 @@ export function MarkdownEditor({
   const isBlog = type === "blog";
 
   async function handleSubmit(formData: FormData) {
-    try {
+    if (isBlog) {
+      try {
+        const html = await marked.parse(text);
 
-      formData.set("content", text);
-      formData.set("tags", JSON.stringify(tags));
-      formData.set("title", title);
-      formData.set("description", description);
+        formData.set("content", html);
+        formData.set("tags", JSON.stringify(tags));
+        formData.set("title", title);
+        formData.set("description", description);
 
-      const result = await formAction(formData);
+        const result = await formAction(formData);
+      } catch (error) {
+        console.error("Error in handleSubmit:", error);
+      }
+    } else {
+      try {
+        const html = await marked.parse(text);
 
-    } catch (error) {
-      console.error("Error in handleSubmit:", error);
+        formData.set("extendedDescription", html);
+        formData.set("tags", JSON.stringify(tags));
+        formData.set("title", title);
+        formData.set("description", description);
+        formData.set("link", link);
+        formData.set("image", image);
+
+        const result = await formAction(formData);
+      } catch (error) {
+        console.error("Error in handleSubmit:", error);
+      }
     }
+
+    setText("");
+    setTitle("");
+    setTags([]);
+    setDescription("");
+    setLocalOptions(options);
+    setLink("");
+    setImage("");
   }
 
   return (
     <Tabs defaultValue="code" className="flex flex-col h-full">
       <div className="flex items-center justify-between px-4 pt-4">
-        <h2 className="font-semibold text-lg">{type}</h2>
+        <h2 className="font-semibold text-lg">{isBlog ? "Blog" : "Project"}</h2>
         <TabsList className="ml-auto">
           <TabsTrigger value="code">Code</TabsTrigger>
           <TabsTrigger value="preview" onClick={populatePreview}>
@@ -598,10 +634,6 @@ export function MarkdownEditor({
                     const form = e.currentTarget;
                     const formData = new FormData(form);
 
-                    formData.set("content", text);
-                    formData.set("tags", JSON.stringify(tags));
-                    formData.set("title", title);
-
                     handleSubmit(formData);
                   }}
                 >
@@ -618,14 +650,26 @@ export function MarkdownEditor({
                     </div>
                     {!isBlog && (
                       <>
-                      <div>
-                        <Label htmlFor="link">Link</Label>
-                        <Input id="link" name="link" placeholder="Link" />
-                      </div>
-                      <div>
-                        <Label htmlFor="image">Image</Label>
-                        <Input id="image" name="image" placeholder="Image" />
-                      </div>
+                        <div>
+                          <Label htmlFor="link">Link</Label>
+                          <Input
+                            id="link"
+                            name="link"
+                            placeholder="Link"
+                            value={link}
+                            onChange={updateLink}
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="image">Image</Label>
+                          <Input
+                            id="image"
+                            name="image"
+                            placeholder="Image"
+                            value={image}
+                            onChange={updateImage}
+                          />
+                        </div>
                       </>
                     )}
                     <div>
@@ -654,7 +698,9 @@ export function MarkdownEditor({
                       />
                     </div>
                     <input type="hidden" name="content" value={text} />
-                    <Button type="submit">Submit</Button>
+                    <DialogClose asChild>
+                      <Button type="submit">Submit</Button>
+                    </DialogClose>
                   </div>
                 </form>
               </DialogContent>

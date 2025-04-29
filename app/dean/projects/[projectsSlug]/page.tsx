@@ -9,7 +9,7 @@ type PageParams = {
 };
 
 export default async function ProjectPage({ params }: PageParams) {
-  const { projectsSlug } = params;
+  const { projectsSlug } = await params;
 
   const projectsSlugNumber = Number(projectsSlug);
 
