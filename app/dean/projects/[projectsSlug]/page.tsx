@@ -3,9 +3,9 @@ import { Badge } from "@/components/ui/badge";
 import { getProject } from "@/server/queries";
 
 type PageParams = {
-  params: {
+  params: Promise<{
     projectsSlug: string;
-  };
+  }>;
 };
 
 export default async function ProjectPage({ params }: PageParams) {

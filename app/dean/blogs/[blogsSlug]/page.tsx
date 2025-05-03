@@ -5,13 +5,13 @@ import { getBlog } from "@/server/queries";
 import "./blog.css";
 
 type PageParams = {
-  params: {
+  params: Promise<{
     blogsSlug: string;
-  };
+  }>;
 };
 
 export default async function BlogPage({ params }: PageParams) {
-  const { blogsSlug } = params;
+  const { blogsSlug } = await params;
 
   const blogsSlugNumber = Number(blogsSlug);
 
