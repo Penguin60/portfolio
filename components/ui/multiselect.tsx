@@ -99,7 +99,7 @@ export function MultiSelect({
                       }
                     }}
                   >
-                    Create "{inputValue}"?
+                    Create &quot;{inputValue}&quot;?
                   </Button>
                 </div>
               </CommandEmpty>
