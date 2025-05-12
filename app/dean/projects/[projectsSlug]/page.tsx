@@ -38,7 +38,7 @@ export default async function ProjectPage({ params }: PageParams) {
         <CardContent>
           <div
             id="markdownOutput"
-            className="min-h-96 h-[95%] w-full prose dark:prose-invert p-4 max-w-full"
+            className="min-h-96 h-[95%] w-full prose prose-code:bg-slate-200 dark:prose-invert dark:prose-pre:bg-zinc-800 dark:prose-code:bg-zinc-700/50 p-4 max-w-full overflow-scroll"
             dangerouslySetInnerHTML={{ __html: project.extendedDescription }}
           />{" "}
         </CardContent>

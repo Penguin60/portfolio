@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 
 import { Textarea } from "../ui/textarea";
 import { Separator } from "../ui/separator";
@@ -30,7 +30,10 @@ import {
   Code,
 } from "lucide-react";
 import { useState } from "react";
-import { marked } from "marked";
+import { Marked } from "marked";
+import { markedHighlight } from "marked-highlight";
+import hljs from "highlight.js";
+import "highlight.js/styles/github-dark.css";
 
 import "./mdeditor.css";
 
@@ -50,6 +53,17 @@ export function MarkdownEditor({
   const [description, setDescription] = useState("");
   const [link, setLink] = useState("");
   const [image, setImage] = useState("");
+
+  const marked = new Marked(
+    markedHighlight({
+      emptyLangClass: "hljs",
+      langPrefix: "hljs language-",
+      highlight(code, lang, info) {
+        const language = hljs.getLanguage(lang) ? lang : "plaintext";
+        return hljs.highlight(code, { language }).value;
+      },
+    })
+  );
 
   function updateText(e: React.ChangeEvent<HTMLTextAreaElement>) {
     setText(e.target.value);
@@ -297,12 +311,6 @@ export function MarkdownEditor({
       text.charAt(start - 1) === "`" &&
       text.charAt(end) === "`";
 
-    const isInline =
-      (beforeText.length > 0 || afterText.length > 0) &&
-      !selectedText.includes("\n") &&
-      !isCodeblock &&
-      !selectedText.includes("```");
-
     if (isCodeblock) {
       const newText = `${text.substring(
         0,
@@ -330,6 +338,25 @@ export function MarkdownEditor({
         textarea.selectionEnd = end - 1;
       }
     } else {
+      const lastNewlineBeforeStart = beforeText.lastIndexOf("\n");
+      const firstNewlineAfterEnd = afterText.indexOf("\n");
+
+      const textBeforeOnSameLine =
+        lastNewlineBeforeStart === -1
+          ? beforeText
+          : beforeText.substring(lastNewlineBeforeStart + 1);
+
+      const textAfterOnSameLine =
+        firstNewlineAfterEnd === -1
+          ? afterText
+          : afterText.substring(0, firstNewlineAfterEnd);
+
+      const hasTextOnSameLine =
+        textBeforeOnSameLine.trim().length > 0 ||
+        textAfterOnSameLine.trim().length > 0;
+
+      const isInline = hasTextOnSameLine && !selectedText.includes("\n");
+
       if (isInline) {
         if (start == end) {
           const newText = `${beforeText}\`${selectedText}\`${afterText}`;
@@ -343,14 +370,14 @@ export function MarkdownEditor({
         }
       } else {
         if (start === end) {
-          const newText = `${beforeText}\`\`\`\`\`\`${afterText}`;
+          const newText = `${beforeText}\`\`\`\n\n\`\`\`${afterText}`;
           textarea.value = newText;
-          textarea.selectionStart = textarea.selectionEnd = start + 3;
+          textarea.selectionStart = textarea.selectionEnd = start + 4;
         } else {
-          const newText = `${beforeText}\`\`\`${selectedText}\`\`\`${afterText}`;
+          const newText = `${beforeText}\`\`\`\n${selectedText}\n\`\`\`${afterText}`;
           textarea.value = newText;
-          textarea.selectionStart = start + 3;
-          textarea.selectionEnd = end + 3;
+          textarea.selectionStart = start + 4;
+          textarea.selectionEnd = end + 4;
         }
       }
     }
@@ -713,7 +740,7 @@ export function MarkdownEditor({
         <div className="flex-1 flex items-center px-4 h-full">
           <div
             id="markdownOutput"
-            className="min-h-96 h-[95%] w-full prose dark:prose-invert p-4 max-w-full"
+            className="min-h-96 h-[95%] w-full prose prose-code:bg-slate-200 dark:prose-invert dark:prose-pre:bg-zinc-800 dark:prose-code:bg-zinc-700/50 p-4 max-w-full overflow-scroll"
           />
         </div>
       </TabsContent>
