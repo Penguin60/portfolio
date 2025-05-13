@@ -2,8 +2,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { getBlog } from "@/server/queries";
-
-import "./blog.css";
+import RenderedMarkdown from "@/components/renderedmd/renderedmd";
 
 type PageParams = {
   params: Promise<{
@@ -36,12 +35,8 @@ export default async function BlogPage({ params }: PageParams) {
           </div>
           <Separator />
         </CardHeader>
-        <CardContent>
-          <div
-            id="markdownOutput"
-            className="min-h-96 w-full h-[82vh] prose prose-code:bg-slate-200 dark:prose-invert prose-pre:bg-zinc-100 dark:prose-pre:bg-zinc-800 dark:prose-code:bg-zinc-700/50 p-4 max-w-full overflow-scroll"
-            dangerouslySetInnerHTML={{ __html: blog.content }}
-          />
+        <CardContent className="overflow-scroll max-h-[75vh]">
+          <RenderedMarkdown content={blog.content} />
         </CardContent>
       </Card>
     </main>

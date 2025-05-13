@@ -120,11 +120,7 @@ export function MarkdownEditor({
 
     output.innerHTML = html;
 
-    try {
-      mermaid.init(undefined, document.querySelectorAll(".mermaid"));
-    } catch (error) {
-      console.error("Mermaid initialization error:", error);
-    }
+    mermaid.run();
   }
 
   function bold() {
@@ -770,7 +766,7 @@ export function MarkdownEditor({
         <div className="flex-1 flex flex-col px-4 h-full overflow-auto">
           <div
             id="markdownOutput"
-            className="min-h-96 w-full h-[82vh] prose prose-code:bg-slate-200 dark:prose-invert prose-pre:bg-zinc-100 dark:prose-pre:bg-zinc-800 dark:prose-code:bg-zinc-700/50 p-4 max-w-full overflow-scroll"
+            className="min-h-96 w-full max-h-[82vh] prose prose-code:bg-slate-200 dark:prose-invert prose-pre:bg-zinc-100 dark:prose-pre:bg-zinc-800 dark:prose-code:bg-zinc-700/50 max-w-full overflow-scroll pt-4"
           />
         </div>
       </TabsContent>
