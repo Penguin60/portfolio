@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 import { getProject } from "@/server/queries";
 
 type PageParams = {
@@ -34,11 +35,12 @@ export default async function ProjectPage({ params }: PageParams) {
               </Badge>
             ))}
           </div>
+          <Separator />
         </CardHeader>
         <CardContent>
           <div
             id="markdownOutput"
-            className="min-h-96 h-[95%] w-full prose prose-code:bg-slate-200 dark:prose-invert dark:prose-pre:bg-zinc-800 dark:prose-code:bg-zinc-700/50 p-4 max-w-full overflow-scroll"
+            className="min-h-96 w-full h-[82vh] prose prose-code:bg-slate-200 dark:prose-invert prose-pre:bg-zinc-100 dark:prose-pre:bg-zinc-800 dark:prose-code:bg-zinc-700/50 p-4 max-w-full overflow-scroll"
             dangerouslySetInnerHTML={{ __html: project.extendedDescription }}
           />{" "}
         </CardContent>

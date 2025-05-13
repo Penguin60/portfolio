@@ -34,6 +34,7 @@ import { Marked } from "marked";
 import { markedHighlight } from "marked-highlight";
 import hljs from "highlight.js";
 import "highlight.js/styles/github-dark.css";
+import mermaid from "mermaid";
 
 import "./mdeditor.css";
 
@@ -65,6 +66,29 @@ export function MarkdownEditor({
     })
   );
 
+  marked.use({
+    renderer: {
+      code: function (code) {
+        if (code.lang == "mermaid")
+          return `<pre class="mermaid">${code.text}</pre>`;
+        return false;
+      },
+    },
+  });
+
+  useEffect(() => {
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: "dark",
+      themeVariables: {
+        darkMode: false,
+      },
+      flowchart: {
+        curve: "basis",
+      },
+    });
+  });
+
   function updateText(e: React.ChangeEvent<HTMLTextAreaElement>) {
     setText(e.target.value);
   }
@@ -95,6 +119,12 @@ export function MarkdownEditor({
     if (!output) return;
 
     output.innerHTML = html;
+
+    try {
+      mermaid.init(undefined, document.querySelectorAll(".mermaid"));
+    } catch (error) {
+      console.error("Mermaid initialization error:", error);
+    }
   }
 
   function bold() {
@@ -737,10 +767,10 @@ export function MarkdownEditor({
       </TabsContent>
       <TabsContent value="preview" className="flex-grow mt-0">
         <Separator className="mt-3" />
-        <div className="flex-1 flex items-center px-4 h-full">
+        <div className="flex-1 flex flex-col px-4 h-full overflow-auto">
           <div
             id="markdownOutput"
-            className="min-h-96 h-[95%] w-full prose prose-code:bg-slate-200 dark:prose-invert dark:prose-pre:bg-zinc-800 dark:prose-code:bg-zinc-700/50 p-4 max-w-full overflow-scroll"
+            className="min-h-96 w-full h-[82vh] prose prose-code:bg-slate-200 dark:prose-invert prose-pre:bg-zinc-100 dark:prose-pre:bg-zinc-800 dark:prose-code:bg-zinc-700/50 p-4 max-w-full overflow-scroll"
           />
         </div>
       </TabsContent>
