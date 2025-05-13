@@ -45,11 +45,6 @@ function Navbar() {
                 Contact
               </Button>
             </Link>
-            <Link href="/dean/credits" className="font-bold">
-              <Button variant="ghost" className="w-16">
-                Credits
-              </Button>
-            </Link>
             <div className="ml-auto">
               <Button variant="outline" size="icon" onClick={toggleDarkMode}>
                 <Sun className={`h-[1.2rem] w-[1.2rem] transition-all ${isDarkMode ? 'rotate-0 scale-100' : 'rotate-90 scale-0'}`} />
