@@ -543,35 +543,28 @@ export function MarkdownEditor({
 
   const isBlog = type === "blog";
 
-  async function handleSubmit(formData: FormData) {
+async function handleSubmit(formData: FormData) {
+  try {
     if (isBlog) {
-      try {
-        const html = await marked.parse(text);
+      const html = await marked.parse(text);
 
-        formData.set("content", html);
-        formData.set("tags", JSON.stringify(tags));
-        formData.set("title", title);
-        formData.set("description", description);
+      formData.set("content", html);
+      formData.set("tags", JSON.stringify(tags));
+      formData.set("title", title);
+      formData.set("description", description);
 
-        const result = await formAction(formData);
-      } catch (error) {
-        console.error("Error in handleSubmit:", error);
-      }
+      await formAction(formData);
     } else {
-      try {
-        const html = await marked.parse(text);
+      const html = await marked.parse(text);
 
-        formData.set("extendedDescription", html);
-        formData.set("tags", JSON.stringify(tags));
-        formData.set("title", title);
-        formData.set("description", description);
-        formData.set("link", link);
-        formData.set("image", image);
+      formData.set("extendedDescription", html);
+      formData.set("tags", JSON.stringify(tags));
+      formData.set("title", title);
+      formData.set("description", description);
+      formData.set("link", link);
+      formData.set("image", image);
 
-        const result = await formAction(formData);
-      } catch (error) {
-        console.error("Error in handleSubmit:", error);
-      }
+      await formAction(formData);
     }
 
     setText("");
@@ -581,7 +574,11 @@ export function MarkdownEditor({
     setLocalOptions(options);
     setLink("");
     setImage("");
+    
+  } catch (error) {
+    console.error("Error in handleSubmit:", error);
   }
+}
 
   return (
     <Tabs defaultValue="code" className="flex flex-col h-full">

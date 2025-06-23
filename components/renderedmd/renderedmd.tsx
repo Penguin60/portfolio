@@ -6,8 +6,13 @@ import hljs from "highlight.js";
 import "highlight.js/styles/github-dark.css";
 import mermaid from "mermaid";
 import { useEffect } from "react";
+import { useTheme } from "next-themes";
 
 export default function RenderedMarkdown({content}: {content: string}) {
+
+  const { theme } = useTheme();
+
+  const isDarkMode = theme === "dark";
 
     const marked = new Marked(
     markedHighlight({
@@ -33,7 +38,7 @@ export default function RenderedMarkdown({content}: {content: string}) {
   useEffect(() => {
     mermaid.initialize({
       startOnLoad: true,
-      theme: "dark",
+      theme: isDarkMode ? "dark" : "default",
       themeVariables: {
         darkMode: false,
       },
