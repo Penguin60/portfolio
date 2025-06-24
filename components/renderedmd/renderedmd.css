@@ -31,3 +31,95 @@
 .prose pre code p:last-child {
   margin-bottom: 0;
 }
+
+.light-theme code.hljs{color:#4c4f69 !important;background:#eff1f5}
+.light-theme code .hljs-keyword{color:#8839ef !important}
+.light-theme code .hljs-built_in{color:#d20f39 !important}
+.light-theme code .hljs-type{color:#df8e1d !important}
+.light-theme code .hljs-literal{color:#fe640b !important}
+.light-theme code .hljs-number{color:#fe640b !important}
+.light-theme code .hljs-operator{color:#04a5e5 !important}
+.light-theme code .hljs-punctuation{color:#5c5f77 !important}
+.light-theme code .hljs-property{color:#179299 !important}
+.light-theme code .hljs-regexp{color:#ea76cb !important}
+.light-theme code .hljs-string{color:#40a02b !important}
+.light-theme code .hljs-char.escape_{color:#40a02b !important}
+.light-theme code .hljs-subst{color:#6c6f85 !important}
+.light-theme code .hljs-symbol{color:#dd7878 !important}
+.light-theme code .hljs-variable{color:#8839ef !important}
+.light-theme code .hljs-variable.language_{color:#8839ef !important}
+.light-theme code .hljs-variable.constant_{color:#fe640b !important}
+.light-theme code .hljs-title{color:#1e66f5 !important}
+.light-theme code .hljs-title.class_{color:#df8e1d !important}
+.light-theme code .hljs-title.function_{color:#1e66f5 !important}
+.light-theme code .hljs-params{color:#4c4f69 !important}
+.light-theme code .hljs-comment{color:#7c7f93 !important}
+.light-theme code .hljs-doctag{color:#d20f39 !important}
+.light-theme code .hljs-meta{color:#fe640b !important}
+.light-theme code .hljs-section{color:#1e66f5 !important}
+.light-theme code .hljs-tag{color:#179299 !important}
+.light-theme code .hljs-name{color:#8839ef !important}
+.light-theme code .hljs-attr{color:#1e66f5 !important}
+.light-theme code .hljs-attribute{color:#40a02b !important}
+.light-theme code .hljs-bullet{color:#179299 !important}
+.light-theme code .hljs-code{color:#40a02b !important}
+.light-theme code .hljs-emphasis{color:#d20f39 !important;font-style:italic !important}
+.light-theme code .hljs-strong{color:#d20f39 !important;font-weight:bold !important}
+.light-theme code .hljs-formula{color:#179299 !important}
+.light-theme code .hljs-link{color:#209fb5 !important;font-style:italic !important}
+.light-theme code .hljs-quote{color:#40a02b !important;font-style:italic !important}
+.light-theme code .hljs-selector-tag{color:#df8e1d !important}
+.light-theme code .hljs-selector-id{color:#1e66f5 !important}
+.light-theme code .hljs-selector-class{color:#179299 !important}
+.light-theme code .hljs-selector-attr{color:#8839ef !important}
+.light-theme code .hljs-selector-pseudo{color:#179299 !important}
+.light-theme code .hljs-template-tag{color:#dd7878 !important}
+.light-theme code .hljs-template-variable{color:#dd7878 !important}
+.light-theme code .hljs-addition{color:#40a02b !important;background:rgba(64,160,43,.15) !important}
+.light-theme code .hljs-deletion{color:#d20f39 !important;background:rgba(210,15,57,.15) !important}
+
+.dark-theme code.hljs{color:#cdd6f4 !important;background:#1e1e2e}
+.dark-theme code .hljs-keyword{color:#cba6f7 !important}
+.dark-theme code .hljs-built_in{color:#f38ba8 !important}
+.dark-theme code .hljs-type{color:#f9e2af !important}
+.dark-theme code .hljs-literal{color:#fab387 !important}
+.dark-theme code .hljs-number{color:#fab387 !important}
+.dark-theme code .hljs-operator{color:#89dceb !important}
+.dark-theme code .hljs-punctuation{color:#bac2de !important}
+.dark-theme code .hljs-property{color:#94e2d5 !important}
+.dark-theme code .hljs-regexp{color:#f5c2e7 !important}
+.dark-theme code .hljs-string{color:#a6e3a1 !important}
+.dark-theme code .hljs-char.escape_{color:#a6e3a1 !important}
+.dark-theme code .hljs-subst{color:#a6adc8 !important}
+.dark-theme code .hljs-symbol{color:#f2cdcd !important}
+.dark-theme code .hljs-variable{color:#cba6f7 !important}
+.dark-theme code .hljs-variable.language_{color:#cba6f7 !important}
+.dark-theme code .hljs-variable.constant_{color:#fab387 !important}
+.dark-theme code .hljs-title{color:#89b4fa !important}
+.dark-theme code .hljs-title.class_{color:#f9e2af !important}
+.dark-theme code .hljs-title.function_{color:#89b4fa !important}
+.dark-theme code .hljs-params{color:#cdd6f4 !important}
+.dark-theme code .hljs-comment{color:#9399b2 !important}
+.dark-theme code .hljs-doctag{color:#f38ba8 !important}
+.dark-theme code .hljs-meta{color:#fab387 !important}
+.dark-theme code .hljs-section{color:#89b4fa !important}
+.dark-theme code .hljs-tag{color:#94e2d5 !important}
+.dark-theme code .hljs-name{color:#cba6f7 !important}
+.dark-theme code .hljs-attr{color:#89b4fa !important}
+.dark-theme code .hljs-attribute{color:#a6e3a1 !important}
+.dark-theme code .hljs-bullet{color:#94e2d5 !important}
+.dark-theme code .hljs-code{color:#a6e3a1 !important}
+.dark-theme code .hljs-emphasis{color:#f38ba8 !important;font-style:italic !important}
+.dark-theme code .hljs-strong{color:#f38ba8 !important;font-weight:bold !important}
+.dark-theme code .hljs-formula{color:#94e2d5 !important}
+.dark-theme code .hljs-link{color:#74c7ec !important;font-style:italic !important}
+.dark-theme code .hljs-quote{color:#a6e3a1 !important;font-style:italic !important}
+.dark-theme code .hljs-selector-tag{color:#f9e2af !important}
+.dark-theme code .hljs-selector-id{color:#89b4fa !important}
+.dark-theme code .hljs-selector-class{color:#94e2d5 !important}
+.dark-theme code .hljs-selector-attr{color:#cba6f7 !important}
+.dark-theme code .hljs-selector-pseudo{color:#94e2d5 !important}
+.dark-theme code .hljs-template-tag{color:#f2cdcd !important}
+.dark-theme code .hljs-template-variable{color:#f2cdcd !important}
+.dark-theme code .hljs-addition{color:#a6e3a1 !important;background:rgba(166,227,161,.15) !important}
+.dark-theme code .hljs-deletion{color:#f38ba8 !important;background:rgba(243,139,168,.15) !important}
