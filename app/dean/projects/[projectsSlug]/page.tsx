@@ -38,7 +38,7 @@ export default async function ProjectPage({ params }: PageParams) {
           </div>
           <Separator />
         </CardHeader>
-        <CardContent className="overflow-scroll max-h-[75vh]">
+        <CardContent className="overflow-y-scroll max-h-[75vh]">
           <RenderedMarkdown content={project.extendedDescription} />
         </CardContent>
       </Card>

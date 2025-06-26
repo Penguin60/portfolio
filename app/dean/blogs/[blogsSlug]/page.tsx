@@ -35,7 +35,7 @@ export default async function BlogPage({ params }: PageParams) {
           </div>
           <Separator />
         </CardHeader>
-        <CardContent className="overflow-scroll max-h-[75vh]">
+        <CardContent className="overflow-y-scroll max-h-[75vh]">
           <RenderedMarkdown content={blog.content} />
         </CardContent>
       </Card>
