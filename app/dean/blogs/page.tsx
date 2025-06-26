@@ -7,6 +7,8 @@ import {
 import { getBlogs } from "@/server/queries";
 import Link from "next/link";
 
+export const dynamic = 'force-dynamic';
+
 export default async function Blogs() {
   const blogs = await getBlogs();
   return (
