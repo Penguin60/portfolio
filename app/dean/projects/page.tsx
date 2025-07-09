@@ -13,10 +13,10 @@ export default async function Projects() {
   const projects = await getProjects();
   return (
     <main className="bg-white dark:bg-zinc-950 text-black dark:text-white flex justify-start items-center h-full mt-3">
-      <Card className="w-[97vw] h-[88vh] flex flex-col justify-start mx-auto items-center overflow-scroll">
+      <Card className="w-[97vw] h-[88vh] flex flex-col justify-start mx-auto items-center overflow-y-scroll">
         {projects.map((project) => (
           <Card key={project.id} className="w-[95vw] mt-3 mb-3">
-            <CardHeader>
+            <CardHeader className="pb-2">
               <Link
                 href={"projects/" + project.id}
                 className="text-black dark:text-white text-4xl font-bold"
@@ -33,7 +33,7 @@ export default async function Projects() {
               <div>
                 <div className="flex justify-between items-start">
                   <div className="flex-1 text-left">
-                    <h2 className="text-black dark:text-white text-lg max-w-[30vw]">
+                    <h2 className="text-black dark:text-white text-l max-w-[30vw]">
                       {project.description}
                     </h2>
                   </div>

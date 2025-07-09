@@ -1,8 +1,5 @@
 "use client";
 
-import { Marked } from "marked";
-import { markedHighlight } from "marked-highlight";
-import hljs from "highlight.js";
 import "./../renderedmd/renderedmd.css";
 import mermaid from "mermaid";
 import { useEffect, useState } from "react";
@@ -13,37 +10,16 @@ export default function RenderedMarkdown({ content }: { content: string }) {
   const [mounted, setMounted] = useState(false);
 
   const isDarkMode = resolvedTheme === "dark";
-  
-  const marked = new Marked(
-    markedHighlight({
-      emptyLangClass: "hljs",
-      langPrefix: "hljs language-",
-      highlight(code, lang, info) {
-        const language = hljs.getLanguage(lang) ? lang : "plaintext";
-        return hljs.highlight(code, { language }).value;
-      },
-    })
-  );
-
-  marked.use({
-    renderer: {
-      code: function (code) {
-        if (code.lang == "mermaid")
-          return `<pre class="mermaid">${code.text}</pre>`;
-        return false;
-      },
-    },
-  });
 
   useEffect(() => {
     setMounted(true);
   }, []);
-  
+
   useEffect(() => {
     if (!mounted) return;
     
     mermaid.initialize({
-      startOnLoad: true,
+      startOnLoad: false,
       theme: isDarkMode ? "dark" : "default",
       themeVariables: {
         darkMode: isDarkMode,
@@ -52,9 +28,13 @@ export default function RenderedMarkdown({ content }: { content: string }) {
         curve: "basis",
       },
     });
+  }, [isDarkMode, resolvedTheme, mounted]);
+
+  useEffect(() => {
+    if (!mounted || !content) return;
     
     mermaid.run();
-  }, [isDarkMode, resolvedTheme, mounted]);
+  }, [content, mounted, isDarkMode, resolvedTheme]);
 
   if (!mounted) {
     return <div className="min-h-96 w-full max-w-full overflow-scroll pt-4"></div>;

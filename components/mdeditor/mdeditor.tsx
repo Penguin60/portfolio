@@ -34,9 +34,8 @@ import { Marked } from "marked";
 import { markedHighlight } from "marked-highlight";
 import hljs from "highlight.js";
 import "highlight.js/styles/github-dark.css";
-import mermaid from "mermaid";
-
 import "./mdeditor.css";
+import RenderedMarkdown from "../renderedmd/renderedmd";
 
 export function MarkdownEditor({
   type,
@@ -54,6 +53,27 @@ export function MarkdownEditor({
   const [description, setDescription] = useState("");
   const [link, setLink] = useState("");
   const [image, setImage] = useState("");
+  const [parsedText, setParsedText] = useState("");
+
+  function updateText(e: React.ChangeEvent<HTMLTextAreaElement>) {
+    setText(e.target.value);
+  }
+
+  const updateTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTitle(e.target.value);
+  };
+
+  const updateDescription = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setDescription(e.target.value);
+  };
+
+  const updateLink = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setLink(e.target.value);
+  };
+
+  const updateImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setImage(e.target.value);
+  };
 
   const marked = new Marked(
     markedHighlight({
@@ -76,51 +96,10 @@ export function MarkdownEditor({
     },
   });
 
-  useEffect(() => {
-    mermaid.initialize({
-      startOnLoad: true,
-      theme: "dark",
-      themeVariables: {
-        darkMode: false,
-      },
-      flowchart: {
-        curve: "basis",
-      },
-    });
-  });
-
-  function updateText(e: React.ChangeEvent<HTMLTextAreaElement>) {
-    setText(e.target.value);
-  }
-
-  const updateTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTitle(e.target.value);
-  };
-
-  const updateDescription = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setDescription(e.target.value);
-  };
-
-  const updateLink = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLink(e.target.value);
-  };
-
-  const updateImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setImage(e.target.value);
-  };
-
   async function populatePreview() {
     const html = await marked.parse(text);
 
-    const output = document.getElementById(
-      "markdownOutput"
-    ) as HTMLTextAreaElement;
-
-    if (!output) return;
-
-    output.innerHTML = html;
-
-    mermaid.run();
+    setParsedText(html);
   }
 
   function bold() {
@@ -543,42 +522,41 @@ export function MarkdownEditor({
 
   const isBlog = type === "blog";
 
-async function handleSubmit(formData: FormData) {
-  try {
-    if (isBlog) {
-      const html = await marked.parse(text);
+  async function handleSubmit(formData: FormData) {
+    try {
+      if (isBlog) {
+        const html = await marked.parse(text);
 
-      formData.set("content", html);
-      formData.set("tags", JSON.stringify(tags));
-      formData.set("title", title);
-      formData.set("description", description);
+        formData.set("content", html);
+        formData.set("tags", JSON.stringify(tags));
+        formData.set("title", title);
+        formData.set("description", description);
 
-      await formAction(formData);
-    } else {
-      const html = await marked.parse(text);
+        await formAction(formData);
+      } else {
+        const html = await marked.parse(text);
 
-      formData.set("extendedDescription", html);
-      formData.set("tags", JSON.stringify(tags));
-      formData.set("title", title);
-      formData.set("description", description);
-      formData.set("link", link);
-      formData.set("image", image);
+        formData.set("extendedDescription", html);
+        formData.set("tags", JSON.stringify(tags));
+        formData.set("title", title);
+        formData.set("description", description);
+        formData.set("link", link);
+        formData.set("image", image);
 
-      await formAction(formData);
+        await formAction(formData);
+      }
+
+      setText("");
+      setTitle("");
+      setTags([]);
+      setDescription("");
+      setLocalOptions(options);
+      setLink("");
+      setImage("");
+    } catch (error) {
+      console.error("Error in handleSubmit:", error);
     }
-
-    setText("");
-    setTitle("");
-    setTags([]);
-    setDescription("");
-    setLocalOptions(options);
-    setLink("");
-    setImage("");
-    
-  } catch (error) {
-    console.error("Error in handleSubmit:", error);
   }
-}
 
   return (
     <Tabs defaultValue="code" className="flex flex-col h-full">
@@ -761,10 +739,7 @@ async function handleSubmit(formData: FormData) {
       <TabsContent value="preview" className="flex-grow mt-0">
         <Separator className="mt-3" />
         <div className="flex-1 flex flex-col px-4 h-full overflow-auto">
-          <div
-            id="markdownOutput"
-            className="min-h-96 w-full max-h-[82vh] prose prose-code:bg-slate-200 dark:prose-invert prose-pre:bg-zinc-100 dark:prose-pre:bg-zinc-800 dark:prose-code:bg-zinc-700/50 max-w-full overflow-scroll pt-4"
-          />
+          <RenderedMarkdown content={parsedText} />
         </div>
       </TabsContent>
     </Tabs>

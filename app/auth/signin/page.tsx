@@ -18,7 +18,7 @@ export default function SignIn() {
         <CardContent className="flex flex-col flex-grow p-4">
           <h1 className="text-black dark:text-white text-2xl font-bold mb-4">Login</h1>
           <Button 
-            onClick={() => signIn("google", { callbackUrl: "/admin" })}
+            onClick={() => signIn("google", { callbackUrl: "/admin", redirect: true })}
             className="text-m dark:text-black text-white"
           >
             Sign in with Google
