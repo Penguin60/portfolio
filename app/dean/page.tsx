@@ -18,7 +18,7 @@ export default async function Home() {
         <div className="flex flex-col w-full h-full">
           <div className="m-8 flex items-center">
             <Avatar className="w-14 h-14">
-              <AvatarImage src="/profile.png" />
+              <AvatarImage src="/profile.png" alt="Profile Picture"/>
               <AvatarFallback>RR</AvatarFallback>
             </Avatar>
             <p className="ml-3 text-lg">

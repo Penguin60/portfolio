@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import './Penguin.css';
+import Image from 'next/image';
 
 const Penguin: React.FC = () => {
   const [lastPosition, setLastPosition] = useState<{ x: number; y: number } | null>(null);
@@ -101,13 +102,15 @@ const Penguin: React.FC = () => {
   };
 
   return (
-    <img
+    <Image
       id="penguin"
       src="/penguin.png"
       alt="Penguin"
       className="absolute cursor-pointer w-40 h-40"
       onClick={movePenguin}
       style={{ position: 'absolute' }}
+      width={160}
+      height={160}
     />
   );
 };

@@ -6,6 +6,7 @@ import {
 } from "@/components/ui/card";
 import { getProjects } from "@/server/queries";
 import Link from "next/link";
+import Image from "next/image";
 
 export const dynamic = 'force-dynamic';
 
@@ -37,9 +38,12 @@ export default async function Projects() {
                       {project.description}
                     </h2>
                   </div>
-                  <img
+                  <Image
+                    alt={project.title}
                     src={project.image}
                     className="rounded-t-lg max-w-[32vw] max-h-[32vh]"
+                    width={500}
+                    height={500}
                   />
                 </div>
               </div>
