@@ -27,10 +27,16 @@ export default async function Home() {
     .slice(0, 3);
 
   return (
-    <main className="bg-white dark:bg-zinc-950 text-black dark:text-white items-center flex justify-center mt-3">
+    <main
+      className="bg-white dark:bg-zinc-950 text-black dark:text-white items-center flex justify-center mt-3 overflow-y-scroll [&::-webkit-scrollbar]:w-2
+  [&::-webkit-scrollbar-track]:bg-gray-100
+  [&::-webkit-scrollbar-thumb]:bg-gray-300
+  dark:[&::-webkit-scrollbar-track]:bg-neutral-700
+  dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500"
+    >
       <div
         id="card"
-        className="relative w-[48vw] h-[88vh] flex overflow-hidden"
+        className="w-[85vw] sm:w-[80vw] md:w-[71vw] lg:w-[62vw] xl:w-[48vw] h-[88vh] flex mx-4"
       >
         <div className="flex flex-col w-full h-full">
           <div className="flex items-center">
@@ -88,7 +94,7 @@ export default async function Home() {
           {latestItems.map((item) => (
             <div
               key={`${item.type}-${item.id}`}
-              className="w-[48vw] mt-3 bg-zinc-100 dark:bg-zinc-900 rounded-lg p-4 pb-0"
+              className="w-[85vw] sm:w-[80vw] md:w-[71vw] lg:w-[62vw] xl:w-[48vw] mt-3 bg-zinc-100 dark:bg-zinc-900 rounded-lg p-4 pb-0"
             >
               {item.type === "blog" ? (
                 <Link href={`dean/blogs/${item.id}`} className="group">
@@ -111,7 +117,7 @@ export default async function Home() {
                     <div>
                       <div className="flex justify-between items-start">
                         <div className="flex-1 text-left">
-                          <h2 className="text-black dark:text-white text-xs max-w-[30vw] mb-6">
+                          <h2 className="text-black dark:text-white text-xs mb-6">
                             {item.description}
                           </h2>
                         </div>
@@ -140,7 +146,7 @@ export default async function Home() {
                     <div>
                       <div className="flex justify-between items-start">
                         <div className="flex-1 text-left">
-                          <h2 className="text-black dark:text-white text-xs max-w-[30vw] mb-6">
+                          <h2 className="text-black dark:text-white text-xs mb-6">
                             {item.description}
                           </h2>
                         </div>
@@ -155,7 +161,7 @@ export default async function Home() {
           <br />
           <h1 className="text-md font-bold text-zinc-400">About</h1>
           <Separator className="my-2" />
-          <div>
+          <div className="pb-24">
             <div className="flex items-center justify-between w-full mt-3">
               <h3 className="text-sm font-bold">Reading</h3>
               <div className="flex-1 border-t border-dashed border-zinc-400 mx-2"></div>
@@ -174,7 +180,9 @@ export default async function Home() {
               </h3>
             </div>
           </div>
+          <div className="invisible sm:visible">
           <ClientPenguin />
+          </div>
         </div>
       </div>
     </main>

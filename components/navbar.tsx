@@ -21,8 +21,8 @@ function Navbar() {
   };
 
   return (
-    <div className="bg-white dark:bg-zinc-950 text-black dark:text-white m-0 p-0 items-start flex justify-center">
-      <div className="w-[50vw] h-16 flex flex-col justify-center mt-5">
+    <div className="bg-white dark:bg-zinc-950 text-black dark:text-white m-0 p-0 items-start flex justify-center mx-4">
+      <div className="w-full sm:w-[85vw] md:w-[75vw] lg:w-[65vw] xl:w-[50vw] h-16 flex flex-col justify-center mt-5">
         <div className="flex items-center">
           <div className="space-x-2">
             <Link href="/dean" className="font-bold">
