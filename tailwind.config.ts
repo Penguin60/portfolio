@@ -32,6 +32,10 @@ const config = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
+      fontSize: {
+        "2xs": ["0.625rem", { lineHeight: "1rem" }],
+        "3xs": ["0.5rem", { lineHeight: "0.75rem" }],
+      },
     },
   },
   plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],

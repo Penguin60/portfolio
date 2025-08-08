@@ -9,6 +9,7 @@ export const projectsTable = pgTable('projects_table', {
   tags: text('tags').array().notNull().default(sql`'{}'::text[]`),
   description: text('description').notNull(),
   extendedDescription: text('extended_description').notNull(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
 });
 
 export const blogsTable = pgTable('blog_table', {

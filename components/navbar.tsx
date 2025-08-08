@@ -22,9 +22,9 @@ function Navbar() {
 
   return (
     <div className="bg-white dark:bg-zinc-950 text-black dark:text-white m-0 p-0 items-start flex justify-center">
-      <Card className="w-[97vw] h-16 flex flex-col justify-center mt-5">
-        <CardHeader>
-          <CardTitle className="flex items-center">
+      <div className="w-[50vw] h-16 flex flex-col justify-center mt-5">
+        <div className="flex items-center">
+          <div className="space-x-2">
             <Link href="/dean" className="font-bold">
               <Button variant="ghost" className="w-16">
                 Home
@@ -40,21 +40,24 @@ function Navbar() {
                 Blog
               </Button>
             </Link>
-            <Link href="/dean/contact" className="font-bold">
-              <Button variant="ghost" className="w-16">
-                Contact
-              </Button>
-            </Link>
-            <div className="ml-auto">
-              <Button variant="outline" size="icon" onClick={toggleDarkMode}>
-                <Sun className={`h-[1.2rem] w-[1.2rem] transition-all ${isDarkMode ? 'rotate-0 scale-100' : 'rotate-90 scale-0'}`} />
-                <Moon className={`absolute h-[1.2rem] w-[1.2rem] transition-all ${isDarkMode ? 'rotate-90 scale-0' : 'rotate-0 scale-100'}`} />
-                <span className="sr-only">Toggle theme</span>
-              </Button>
-            </div>
-          </CardTitle>
-        </CardHeader>
-      </Card>
+          </div>
+          <div className="ml-auto">
+            <Button variant="ghost" size="icon" onClick={toggleDarkMode}>
+              <Sun
+                className={`h-[1.2rem] w-[1.2rem] transition-all ${
+                  isDarkMode ? "rotate-0 scale-100" : "rotate-90 scale-0"
+                }`}
+              />
+              <Moon
+                className={`absolute h-[1.2rem] w-[1.2rem] transition-all ${
+                  isDarkMode ? "rotate-90 scale-0" : "rotate-0 scale-100"
+                }`}
+              />
+              <span className="sr-only">Toggle theme</span>
+            </Button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

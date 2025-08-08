@@ -10,12 +10,12 @@ const Penguin: React.FC = () => {
 
   useEffect(() => {
     const penguin = document.getElementById('penguin');
-    const card = document.getElementById('card');
-    if (penguin && card) {
-      const cardRect = card.getBoundingClientRect();
+    if (penguin) {
+      const windowWidth = window.innerWidth;
+      const windowHeight = window.innerHeight;
       const initialPosition = {
-        x: cardRect.width - penguin.clientWidth,
-        y: cardRect.height - penguin.clientHeight,
+        x: windowWidth - penguin.clientWidth,
+        y: windowHeight - penguin.clientHeight,
       };
       penguin.style.left = `${initialPosition.x}px`;
       penguin.style.top = `${initialPosition.y}px`;
@@ -27,21 +27,22 @@ const Penguin: React.FC = () => {
     if (isMoving) return;
 
     const penguin = document.getElementById('penguin');
-    const card = document.getElementById('card');
-    if (penguin && card) {
+    if (penguin) {
       setIsMoving(true);
 
-      const cardRect = card.getBoundingClientRect();
+      const windowWidth = window.innerWidth;
+      const windowHeight = window.innerHeight;
+      
       const positions = [
         // Right edge (excluding corners)
-        ...Array.from({ length: cardRect.height - penguin.clientHeight }, (_, i) => ({
-          x: cardRect.width - penguin.clientWidth,
+        ...Array.from({ length: windowHeight - penguin.clientHeight }, (_, i) => ({
+          x: windowWidth - penguin.clientWidth,
           y: i,
         })),
         // Bottom edge (excluding corners)
-        ...Array.from({ length: cardRect.width - penguin.clientWidth }, (_, i) => ({
+        ...Array.from({ length: windowWidth - penguin.clientWidth }, (_, i) => ({
           x: i,
-          y: cardRect.height - penguin.clientHeight,
+          y: windowHeight - penguin.clientHeight,
         })),
       ];
 
@@ -56,35 +57,35 @@ const Penguin: React.FC = () => {
         : filteredPositions[0];
 
       // Move penguin off the screen
-      if (lastPosition?.x === cardRect.width - penguin.clientWidth) {
+      if (lastPosition?.x === windowWidth - penguin.clientWidth) {
         penguin.style.transition = 'left 2s';
-        penguin.style.left = `${cardRect.right}px`;
+        penguin.style.left = `${windowWidth}px`;
       } else {
         penguin.style.transition = 'top 2s';
-        penguin.style.top = `${cardRect.bottom}px`;
+        penguin.style.top = `${windowHeight}px`;
       }
 
       setTimeout(() => {
         // Move penguin to the new position
         penguin.style.transition = 'none';
-        if (randomPosition.x === cardRect.width - penguin.clientWidth) {
-          penguin.style.left = `${cardRect.right}px`;
+        if (randomPosition.x === windowWidth - penguin.clientWidth) {
+          penguin.style.left = `${windowWidth}px`;
           penguin.style.top = `${randomPosition.y}px`;
         } else {
           penguin.style.left = `${randomPosition.x}px`;
-          penguin.style.top = `${cardRect.bottom}px`;
+          penguin.style.top = `${windowHeight}px`;
         }
 
         setTimeout(() => {
           penguin.style.transition = 'left 2s, top 2s';
-          if (randomPosition.x === cardRect.width - penguin.clientWidth) {
+          if (randomPosition.x === windowWidth - penguin.clientWidth) {
             penguin.style.left = `${randomPosition.x}px`;
           } else {
             penguin.style.top = `${randomPosition.y}px`;
           }
 
           // Rotate the penguin if it's on the right edge
-          if (randomPosition.x === cardRect.width - penguin.clientWidth) {
+          if (randomPosition.x === windowWidth - penguin.clientWidth) {
             penguin.style.transform = 'rotate(270deg)';
           } else {
             penguin.style.transform = 'rotate(0deg)';
@@ -106,9 +107,9 @@ const Penguin: React.FC = () => {
       id="penguin"
       src="/penguin.png"
       alt="Penguin"
-      className="absolute cursor-pointer w-40 h-40"
+      className="cursor-pointer"
       onClick={movePenguin}
-      style={{ position: 'absolute' }}
+      style={{ position: 'fixed', zIndex: 999 }}
       width={160}
       height={160}
     />

@@ -10,15 +10,15 @@ export default async function Blogs() {
   const blogs = await getBlogs();
   return (
     <main className="bg-white dark:bg-zinc-950 text-black dark:text-white flex justify-start items-center h-full mt-3">
-      <Card className="w-[97vw] h-[88vh] flex flex-col justify-start mx-auto items-center overflow-y-scroll">
+      <div className="w-[97vw] h-[88vh] flex flex-col justify-start mx-auto items-center overflow-y-auto">
         {blogs.map((blog) => (
-          <div key={blog.id} className="w-[95vw] mt-3 mb-3">
-            <Link href={"blogs/" + blog.id}>
-              <CardHeader className="pb-2">
-                <h1 className="text-black dark:text-white text-4xl font-bold">
+          <div key={blog.id} className="w-[48vw] mt-3 mb-3">
+            <Link href={"blogs/" + blog.id} className="group">
+              <div className="pb-2 flex justify-between items-start">
+                <h3 className="text-black dark:text-white text-2xl font-bold group-hover:underline">
                   {blog.title}
-                </h1>
-                <div className="text-gray-800 dark:text-gray-300 text-sm">
+                </h3>
+                <div className="flex items-center text-gray-800 dark:text-gray-300 text-sm text-right min-w-fit ml-4 mt-auto">
                   {blog.createdAt.getDate().toString() +
                     " " +
                     blog.createdAt.toLocaleString("default", {
@@ -27,12 +27,12 @@ export default async function Blogs() {
                     " " +
                     blog.createdAt.getFullYear()}
                 </div>
-              </CardHeader>
-              <CardContent className="pb-0">
+              </div>
+              <div className="pb-0">
                 <div>
                   <div className="flex justify-between items-start">
                     <div className="flex-1 text-left">
-                      <h2 className="text-black dark:text-white text-l max-w-[30vw] mb-6">
+                      <h2 className="text-black dark:text-white text-sm max-w-[30vw] mb-6">
                         {blog.description}
                       </h2>
                     </div>
@@ -41,11 +41,11 @@ export default async function Blogs() {
                 {blog != blogs[blogs.length - 1] && (
                   <Separator className="my-2" />
                 )}
-              </CardContent>
+              </div>
             </Link>
           </div>
         ))}
-      </Card>
+      </div>
     </main>
   );
 }

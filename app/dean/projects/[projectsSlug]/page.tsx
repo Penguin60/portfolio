@@ -20,28 +20,34 @@ export default async function ProjectPage({ params }: PageParams) {
   const project = projects[0];
 
   return (
-    <main className="bg-white dark:bg-zinc-950 text-black dark:text-white items-center flex justify-center h-full mt-3">
-      <Card className="w-[97vw] h-[88vh] flex-col justify-start mx-auto items-center">
-        <CardHeader>
+    <main
+      className="bg-white dark:bg-zinc-950 text-black dark:text-white items-center flex justify-center h-full overflow-y-scroll [&::-webkit-scrollbar]:w-2
+  [&::-webkit-scrollbar-track]:bg-gray-100
+  [&::-webkit-scrollbar-thumb]:bg-gray-300
+  dark:[&::-webkit-scrollbar-track]:bg-neutral-700
+  dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500"
+    >
+      <div className="w-[48vw] h-[88vh] flex-col justify-start mx-auto items-center">
+        <div>
           <a
             href={project.link}
-            className="text-black dark:text-white text-4xl font-bold"
+            className="text-black dark:text-white text-3xl font-bold"
           >
             {project.title}
           </a>
           <div>
             {project.tags.map((tag) => (
-              <Badge key={tag} className="mr-0.5">
+              <Badge key={tag} className="mr-0.5 text-2xs">
                 {tag}
               </Badge>
             ))}
           </div>
-          <Separator />
-        </CardHeader>
-        <CardContent className="overflow-y-scroll max-h-[75vh]">
+          <Separator className="my-4" />
+        </div>
+        <div className="max-h-[75vh]">
           <RenderedMarkdown content={project.extendedDescription} />
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </main>
   );
 }

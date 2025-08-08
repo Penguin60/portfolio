@@ -1,4 +1,5 @@
 #penguin {
-    position: absolute;
-    transition: top 2s, left 2s;
-  }
+  position: fixed;
+  transition: top 2s, left 2s;
+  z-index: 999; /* Ensure penguin stays on top of other elements */
+}

@@ -22,9 +22,8 @@ function AdminNavbar() {
 
   return (
     <div className="bg-white dark:bg-zinc-950 text-black dark:text-white m-0 p-0 items-start flex justify-center">
-      <Card className="w-[97vw] h-16 flex flex-col justify-center mt-5">
-        <CardHeader>
-          <CardTitle className="flex items-center">
+      <div className="w-[97vw] h-16 flex flex-col justify-center mt-5">
+          <div className="flex items-center">
             <Link href="/admin" className="font-bold">
               <Button variant="ghost" className="w-16">
                 Admin
@@ -47,9 +46,8 @@ function AdminNavbar() {
                 <span className="sr-only">Toggle theme</span>
               </Button>
             </div>
-          </CardTitle>
-        </CardHeader>
-      </Card>
+          </div>
+      </div>
     </div>
   );
 }
