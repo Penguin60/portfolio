@@ -161,7 +161,7 @@ export default async function Home() {
           <br />
           <h1 className="text-md font-bold text-zinc-400">About</h1>
           <Separator className="my-2" />
-          <div className="pb-24">
+          <div>
             <div className="flex items-center justify-between w-full mt-3">
               <h3 className="text-sm font-bold">Reading</h3>
               <div className="flex-1 border-t border-dashed border-zinc-400 mx-2"></div>

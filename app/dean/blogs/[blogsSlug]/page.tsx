@@ -27,7 +27,7 @@ export default async function BlogPage({ params }: PageParams) {
   dark:[&::-webkit-scrollbar-track]:bg-neutral-700
   dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500"
     >
-      <div className="w-[48vw] h-[88vh] flex-col justify-start mx-auto items-center">
+      <div className="w-[85vw] sm:w-[80vw] md:w-[71vw] lg:w-[62vw] xl:w-[48vw] h-[88vh] flex-col justify-start mx-auto items-center">
         <div>
           <div className="flex justify-between items-center">
             <p className="text-black dark:text-white text-3xl font-bold">

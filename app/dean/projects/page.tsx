@@ -20,7 +20,7 @@ export default async function Projects() {
         {projects.map((project) => (
           <div
             key={project.id}
-            className="group w-[48vw] mt-3 bg-zinc-100 dark:bg-zinc-900 rounded-lg p-4 pb-0 hover:cursor-pointer"
+            className="group w-[85vw] sm:w-[80vw] md:w-[71vw] lg:w-[62vw] xl:w-[48vw] mt-3 bg-zinc-100 dark:bg-zinc-900 rounded-lg p-4 pb-0 hover:cursor-pointer"
           >
             <Link href={"projects/" + project.id}>
               <div className="pb-2">
@@ -40,15 +40,15 @@ export default async function Projects() {
                   <h2 className="text-zinc-700 dark:text-zinc-300 text-sm mb-3 text-left">
                     {project.description}
                   </h2>
-                  <div className="flex justify-end">
-                    <Image
-                      alt={project.title}
-                      src={project.image}
-                      className="rounded-t-lg max-w-[32vw] max-h-[32vh] mt-2"
-                      width={500}
-                      height={500}
-                    />
-                  </div>
+                    <div className="sm:flex sm:justify-end hidden">
+                      <Image
+                        alt={project.title}
+                        src={project.image}
+                        className="rounded-t-lg max-w-[32vw] max-h-[32vh] mt-2"
+                        width={500}
+                        height={500}
+                      />
+                    </div>
                 </div>
               </div>
             </Link>

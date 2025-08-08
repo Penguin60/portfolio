@@ -18,7 +18,7 @@ export default async function Blogs() {
     >
       <div className="w-[97vw] h-[88vh] flex flex-col justify-start mx-auto items-center overflow-y-auto">
         {blogs.map((blog) => (
-          <div key={blog.id} className="w-[48vw] mt-3 mb-3">
+          <div key={blog.id} className="w-[85vw] sm:w-[80vw] md:w-[71vw] lg:w-[62vw] xl:w-[48vw] mt-3 mb-3">
             <Link href={"blogs/" + blog.id} className="group">
               <div className="pb-2 flex justify-between items-start">
                 <h3 className="text-black dark:text-white text-2xl font-bold group-hover:underline">
@@ -38,7 +38,7 @@ export default async function Blogs() {
                 <div>
                   <div className="flex justify-between items-start">
                     <div className="flex-1 text-left">
-                      <h2 className="text-black dark:text-white text-sm max-w-[30vw] mb-6">
+                      <h2 className="text-black dark:text-white text-sm mb-6">
                         {blog.description}
                       </h2>
                     </div>
