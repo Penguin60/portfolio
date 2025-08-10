@@ -27,16 +27,10 @@ export default async function Home() {
     .slice(0, 3);
 
   return (
-    <main
-      className="bg-white dark:bg-zinc-950 text-black dark:text-white items-center flex justify-center mt-3 overflow-y-scroll [&::-webkit-scrollbar]:w-2
-  [&::-webkit-scrollbar-track]:bg-gray-100
-  [&::-webkit-scrollbar-thumb]:bg-gray-300
-  dark:[&::-webkit-scrollbar-track]:bg-neutral-700
-  dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500"
-    >
+    <main className="bg-white dark:bg-zinc-950 text-black dark:text-white items-center flex justify-center mt-3 pb-12 sm:pb-0">
       <div
         id="card"
-        className="w-[85vw] sm:w-[80vw] md:w-[71vw] lg:w-[62vw] xl:w-[48vw] h-[88vh] flex mx-4"
+        className="w-[85vw] sm:w-[80vw] md:w-[71vw] lg:w-[62vw] xl:w-[48vw] flex mx-4"
       >
         <div className="flex flex-col w-full h-full">
           <div className="flex items-center">
@@ -81,11 +75,6 @@ export default async function Home() {
               friends
             </a>
             !
-          </p>
-          <p className="mt-2 text-sm">
-            When I&apos;m not coding, you&apos;ll find me{" "}
-            <strong>reading</strong>, playing <strong>tennis</strong> or
-            cramming for exams.
           </p>
           <br />
           <br />
@@ -181,7 +170,7 @@ export default async function Home() {
             </div>
           </div>
           <div className="invisible sm:visible">
-          <ClientPenguin />
+            <ClientPenguin />
           </div>
         </div>
       </div>

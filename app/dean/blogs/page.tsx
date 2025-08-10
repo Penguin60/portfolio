@@ -9,16 +9,13 @@ export const dynamic = "force-dynamic";
 export default async function Blogs() {
   const blogs = await getBlogs();
   return (
-    <main
-      className="bg-white dark:bg-zinc-950 text-black dark:text-white flex justify-start items-center h-full mt-3 overflow-y-scroll [&::-webkit-scrollbar]:w-2
-  [&::-webkit-scrollbar-track]:bg-gray-100
-  [&::-webkit-scrollbar-thumb]:bg-gray-300
-  dark:[&::-webkit-scrollbar-track]:bg-neutral-700
-  dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500"
-    >
-      <div className="w-[97vw] h-[88vh] flex flex-col justify-start mx-auto items-center overflow-y-auto">
+    <main className="bg-white dark:bg-zinc-950 text-black dark:text-white flex justify-start items-center h-full mt-3 pb-4 sm:pb-0">
+      <div className="w-[97vw] flex flex-col justify-start mx-auto items-center overflow-y-auto pb-4">
         {blogs.map((blog) => (
-          <div key={blog.id} className="w-[85vw] sm:w-[80vw] md:w-[71vw] lg:w-[62vw] xl:w-[48vw] mt-3 mb-3">
+          <div
+            key={blog.id}
+            className="w-[85vw] sm:w-[80vw] md:w-[71vw] lg:w-[62vw] xl:w-[48vw] mt-3 mb-3"
+          >
             <Link href={"blogs/" + blog.id} className="group">
               <div className="pb-2 flex justify-between items-start">
                 <h3 className="text-black dark:text-white text-2xl font-bold group-hover:underline">
