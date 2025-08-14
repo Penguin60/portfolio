@@ -14,7 +14,7 @@ export default async function Projects() {
         {projects.map((project) => (
           <div
             key={project.id}
-            className="group w-[85vw] sm:w-[80vw] md:w-[71vw] lg:w-[62vw] xl:w-[48vw] mt-3 bg-zinc-100 dark:bg-zinc-900 rounded-lg p-4 pb-4 hover:cursor-pointer"
+            className="group w-[85vw] sm:w-[80vw] md:w-[71vw] lg:w-[62vw] xl:w-[48vw] mt-3 bg-zinc-100 dark:bg-zinc-900 rounded-lg p-4 pb-4 sm:pb-0 hover:cursor-pointer"
           >
             <Link href={"projects/" + project.id}>
               <div className="pb-2">
