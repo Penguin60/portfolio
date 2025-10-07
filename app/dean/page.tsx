@@ -59,12 +59,12 @@ export default async function Home() {
               </div>
             </div>
             <Avatar className="ml-auto w-16 h-16">
-              <AvatarImage src="profile.png" alt="Radean's Avatar" />
+              <AvatarImage src="profile.jpeg" alt="Radean's Avatar" />
               <AvatarFallback>RN</AvatarFallback>
             </Avatar>
           </div>
           <p className="mt-4 text-sm">
-            I&apos;m a 10th grade IB student with a passion for{" "}
+            I&apos;m an 11th grade IB student with a passion for{" "}
             <strong>programming</strong>, <strong>robotics</strong> and{" "}
             <strong>mathematics</strong>.
           </p>
