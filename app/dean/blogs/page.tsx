@@ -8,6 +8,7 @@ export const dynamic = "force-dynamic";
 
 export default async function Blogs() {
   const blogs = await getBlogs();
+  blogs.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
   return (
     <main className="bg-white dark:bg-zinc-950 text-black dark:text-white flex justify-start items-center h-full mt-3 pb-4 sm:pb-0">
       <div className="w-[97vw] flex flex-col justify-start mx-auto items-center overflow-y-auto pb-4">
