@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React from "react";
 
 import { Textarea } from "../ui/textarea";
 import { Separator } from "../ui/separator";
@@ -36,6 +36,7 @@ import hljs from "highlight.js";
 import "highlight.js/styles/github-dark.css";
 import "./mdeditor.css";
 import RenderedMarkdown from "../renderedmd/renderedmd";
+import { uploadBlob } from "@/server/actions";
 
 export function MarkdownEditor({
   type,
@@ -54,6 +55,44 @@ export function MarkdownEditor({
   const [link, setLink] = useState("");
   const [image, setImage] = useState("");
   const [parsedText, setParsedText] = useState("");
+
+  async function pasteHandler(e: React.ClipboardEvent<HTMLTextAreaElement>) {
+    const items = e.clipboardData.items;
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+      if (item.kind === "file") {
+        const file = item.getAsFile();
+        if (!file) return;
+
+        try {
+          const formData = new FormData();
+          formData.append("file", file);
+
+          const data = await uploadBlob(formData, "blog");
+          if (!data) throw new Error("Upload failed");
+
+          const textarea = document.getElementById(
+            "markdownInput"
+          ) as HTMLTextAreaElement;
+          if (textarea && data.url) {
+            const imageMarkdown = `![${file.name}](${data.url})`;
+            const start = textarea.selectionStart;
+            const newText =
+              textarea.value.substring(0, start) +
+              imageMarkdown +
+              textarea.value.substring(start);
+
+            textarea.value = newText;
+            updateText({
+              target: textarea,
+            } as React.ChangeEvent<HTMLTextAreaElement>);
+          }
+        } catch (error) {
+          console.error("Error uploading file:", error);
+        }
+      }
+    }
+  }
 
   function updateText(e: React.ChangeEvent<HTMLTextAreaElement>) {
     setText(e.target.value);
@@ -578,6 +617,7 @@ export function MarkdownEditor({
             className="min-h-96 h-[95%] flex-1 p-4"
             id="markdownInput"
             onChange={updateText}
+            onPaste={pasteHandler}
             value={text}
             name="content"
           />
@@ -736,9 +776,12 @@ export function MarkdownEditor({
           </div>
         </div>
       </TabsContent>
-      <TabsContent value="preview" className="flex-grow mt-0">
+      <TabsContent
+        value="preview"
+        className="flex-grow mt-0 flex flex-col min-h-0"
+      >
         <Separator className="mt-3" />
-        <div className="flex-1 flex flex-col px-4 h-full overflow-auto">
+        <div className="flex-1 overflow-scroll px-4">
           <RenderedMarkdown content={parsedText} />
         </div>
       </TabsContent>

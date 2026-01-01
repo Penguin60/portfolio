@@ -43,7 +43,7 @@ export default function RenderedMarkdown({ content }: { content: string }) {
   return (
     <div
       id="markdownOutput"
-      className={`min-h-96 w-full prose prose-code:bg-slate-200 dark:prose-invert prose-pre:bg-zinc-100 dark:prose-pre:bg-zinc-800 dark:prose-code:bg-zinc-700/50 max-w-full pt-4 ${
+      className={`min-h-96 w-full overflow-scroll prose prose-code:bg-slate-200 dark:prose-invert prose-pre:bg-zinc-100 dark:prose-pre:bg-zinc-800 dark:prose-code:bg-zinc-700/50 max-w-full pt-4 ${
         isDarkMode ? "dark-theme" : "light-theme"
       }`}
       dangerouslySetInnerHTML={{ __html: content }}
