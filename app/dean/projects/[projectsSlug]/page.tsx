@@ -31,7 +31,7 @@ export default async function ProjectPage({ params }: PageParams) {
         <div>
           <a
             href={project.link}
-            className="text-black dark:text-white text-3xl font-bold"
+            className="text-black dark:text-white text-3xl font-bold hover:underline"
           >
             {project.title}
           </a>
