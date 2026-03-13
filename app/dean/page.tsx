@@ -39,20 +39,23 @@ export default async function Home() {
                 <strong>Hey there</strong>, I&apos;m <strong>Radean</strong>
               </p>
               <div className="flex items-center mt-4">
-                <Button variant="ghost" size="icon">
-                  <a href="mailto:radean.rashed@gmail.com">
+                <Button asChild variant="ghost" size="icon">
+                  <a href="mailto:radean.rashed@gmail.com" aria-label="Email">
                     <EnvelopeClosedIcon />
                   </a>
                 </Button>
                 <Separator orientation="vertical" className="h-4 mx-2" />
-                <Button variant="ghost" size="icon">
-                  <a href="https://github.com/Penguin60">
+                <Button asChild variant="ghost" size="icon">
+                  <a href="https://github.com/Penguin60" aria-label="GitHub">
                     <GitHubLogoIcon />
                   </a>
                 </Button>
                 <Separator orientation="vertical" className="h-4 mx-2" />
-                <Button variant="ghost" size="icon">
-                  <a href="https://www.linkedin.com/in/radean-rashed-7aa621362">
+                <Button asChild variant="ghost" size="icon">
+                  <a
+                    href="https://www.linkedin.com/in/radean-rashed-7aa621362"
+                    aria-label="LinkedIn"
+                  >
                     <LinkedInLogoIcon />
                   </a>
                 </Button>
@@ -154,12 +157,12 @@ export default async function Home() {
             <div className="flex items-center justify-between w-full mt-3">
               <h3 className="text-sm font-bold">Reading</h3>
               <div className="flex-1 border-t border-dashed border-zinc-400 mx-2"></div>
-              <h3 className="text-right min-w-fit text-sm">War and Peace</h3>
+              <h3 className="text-right min-w-fit text-sm">Abundance</h3>
             </div>
             <div className="flex items-center justify-between w-full mt-3">
               <h3 className="text-sm font-bold">Watching</h3>
               <div className="flex-1 border-t border-dashed border-zinc-400 mx-2"></div>
-              <h3 className="text-right min-w-fit text-sm">Andor</h3>
+              <h3 className="text-right min-w-fit text-sm">The Bear</h3>
             </div>
             <div className="flex items-center justify-between w-full mt-3">
               <h3 className="text-sm font-bold">Developing</h3>
