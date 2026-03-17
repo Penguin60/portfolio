@@ -70,12 +70,7 @@ export default async function Home() {
             I&apos;m an 11th grade IB student interested in programming, robotics and design.
           </p>
           <p className="mt-2 text-sm">
-            I love learning new skills, experimenting with technology and
-            creating fun projects with my{" "}
-            <a href="https://github.com/orgs/STRNerds/" className="underline">
-              friends
-            </a>
-            !
+            I love learning, experimenting and seeing the things I build come to life!
           </p>
           <br />
           <br />
