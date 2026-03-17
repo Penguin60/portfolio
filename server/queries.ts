@@ -72,14 +72,14 @@ export async function createProject(
 export async function createBlog(
   title: string,
   description: string,
-  content: string,
+  contentUrl: string,
   tags: string[]
 ) {
   const blog = await db.insert(blogsTable).values({
     title,
     tags,
     description,
-    content,
+    contentUrl,
   });
   return blog;
 }

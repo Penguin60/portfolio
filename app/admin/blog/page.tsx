@@ -1,4 +1,5 @@
 import { getBlogsTags, createBlog } from "@/server/queries";
+import { put } from "@vercel/blob";
 
 import { Card } from "@/components/ui/card";
 
@@ -12,12 +13,21 @@ async function AdminBlog() {
     "use server";
     
     const title = formData.get("title") as string;
-    const content = formData.get("content") as string;
+    const mdxFile = formData.get("mdxFile") as File;
     const tagsString = formData.get("tags") as string;
     const tags = tagsString ? JSON.parse(tagsString) : [];
     const description = formData.get("description") as string;
+
+    if (!mdxFile || mdxFile.size === 0) {
+      return { success: false, message: "MDX file is required" };
+    }
+
+    // Upload MDX to Vercel Blob
+    const blob = await put(`blogs/${mdxFile.name}`, mdxFile, {
+      access: "public",
+    });
     
-    await createBlog(title, description, content, tags);
+    await createBlog(title, description, blob.url, tags);
     
     return { success: true, message: "Blog created successfully" };
   }

@@ -17,7 +17,7 @@ export const blogsTable = pgTable('blog_table', {
   title: text('title').notNull(),
   tags: text('tags').array().notNull().default(sql`'{}'::text[]`),
   description: text('description').notNull(),
-  content: text('content').notNull(),
+  contentUrl: text('content_url').notNull(),
   createdAt: timestamp('created_at').notNull().defaultNow(),
 });
 

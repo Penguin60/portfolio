@@ -564,9 +564,6 @@ export function MarkdownEditor({
   async function handleSubmit(formData: FormData) {
     try {
       if (isBlog) {
-        const html = await marked.parse(text);
-
-        formData.set("content", html);
         formData.set("tags", JSON.stringify(tags));
         formData.set("title", title);
         formData.set("description", description);
@@ -693,7 +690,7 @@ export function MarkdownEditor({
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>Project Creation</DialogTitle>
+                  <DialogTitle>{isBlog ? "Blog Creation" : "Project Creation"}</DialogTitle>
                 </DialogHeader>
                 <form
                   action={formAction}
@@ -765,7 +762,19 @@ export function MarkdownEditor({
                         onChange={updateDescription}
                       />
                     </div>
-                    <input type="hidden" name="content" value={text} />
+                    {isBlog && (
+                      <div>
+                        <Label htmlFor="mdxFile">MDX File</Label>
+                        <Input
+                          id="mdxFile"
+                          name="mdxFile"
+                          type="file"
+                          accept=".mdx"
+                          required
+                        />
+                      </div>
+                    )}
+                    {!isBlog && <input type="hidden" name="content" value={text} />}
                     <DialogClose asChild>
                       <Button type="submit">Submit</Button>
                     </DialogClose>

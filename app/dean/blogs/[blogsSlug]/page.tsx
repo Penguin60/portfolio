@@ -1,13 +1,31 @@
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import { getBlog } from "@/server/queries";
-import RenderedMarkdown from "@/components/renderedmd/renderedmd";
+import { getMdxContent } from "@/lib/mdx";
+import { MDXRemote } from "next-mdx-remote/rsc";
+import rehypeHighlight from "rehype-highlight";
+import remarkGfm from "remark-gfm";
+import { CodeBlock } from "@/components/mdx/codeblock";
+import { Callout, StatCard, SimpleChart } from "@/components/mdx/widgets";
 
 type PageParams = {
   params: Promise<{
     blogsSlug: string;
   }>;
+};
+
+const components = {
+  Callout,
+  StatCard,
+  SimpleChart,
+  code: (props: any) => {
+    // If it's inline code (no language class)
+    if (!props.className) {
+      return (
+        <code className="bg-zinc-100 dark:bg-zinc-800 rounded px-1 py-0.5 text-pink-500 dark:text-pink-400 font-mono text-sm" {...props} />
+      );
+    }
+    return <CodeBlock {...props} />;
+  },
+  pre: (props: any) => <>{props.children}</>, // Strip the outer pre tag
 };
 
 export default async function BlogPage({ params }: PageParams) {
@@ -18,6 +36,12 @@ export default async function BlogPage({ params }: PageParams) {
   const blogs = await getBlog(blogsSlugNumber);
 
   const blog = blogs[0];
+
+  if (!blog) {
+    return <div>Blog not found</div>;
+  }
+
+  const mdxSource = await getMdxContent(blog.contentUrl);
 
   return (
     <main
@@ -46,8 +70,17 @@ export default async function BlogPage({ params }: PageParams) {
             </div>
           </div>
         </div>
-        <div className="mt-6">
-          <RenderedMarkdown content={blog.content} />
+        <div className="mt-6 prose dark:prose-invert max-w-none pb-12">
+          <MDXRemote
+            source={mdxSource}
+            options={{
+              mdxOptions: {
+                remarkPlugins: [remarkGfm],
+                rehypePlugins: [rehypeHighlight],
+              },
+            }}
+            components={components}
+          />
         </div>
       </div>
     </main>
