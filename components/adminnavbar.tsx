@@ -21,7 +21,7 @@ function AdminNavbar() {
   };
 
   return (
-    <div className="bg-white dark:bg-zinc-950 text-black dark:text-white m-0 p-0 items-start flex justify-center">
+    <div className="bg-zinc-50 dark:bg-zinc-950 text-black dark:text-white m-0 p-0 items-start flex justify-center">
       <div className="w-[97vw] h-16 flex flex-col justify-center mt-5">
           <div className="flex items-center">
             <Link href="/admin" className="font-bold">

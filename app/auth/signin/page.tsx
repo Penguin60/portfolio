@@ -7,7 +7,7 @@ import Image from "next/image";
 
 export default function SignIn() {
   return (
-    <main className="bg-white dark:bg-zinc-950 text-black dark:text-white items-center flex justify-center h-full mt-3">
+    <main className="bg-zinc-50 dark:bg-zinc-950 text-black dark:text-white items-center flex justify-center h-full mt-3">
       <Card className="w-[30vw] h-[30vh] flex flex-col overflow-hidden">
         <div className="h-1/2 relative">
           <Image 

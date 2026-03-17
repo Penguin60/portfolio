@@ -25,7 +25,7 @@ async function AdminProjects() {
   }
 
   return (
-    <main className="bg-white dark:bg-zinc-950 text-black dark:text-white items-center flex justify-center h-full mt-3">
+    <main className="bg-zinc-50 dark:bg-zinc-950 text-black dark:text-white items-center flex justify-center h-full mt-3">
       <Card
         id="card"
         className="relative w-[97vw] h-[88vh] overflow-scroll flex flex-col"

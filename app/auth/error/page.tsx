@@ -7,7 +7,7 @@ import Link from "next/link";
 export default function AuthError() {
 
   return (
-    <main className="bg-white dark:bg-zinc-950 text-black dark:text-white items-center flex justify-center h-full mt-3">
+    <main className="bg-zinc-50 dark:bg-zinc-950 text-black dark:text-white items-center flex justify-center h-full mt-3">
       <Card className="w-[97vw] h-[88vh] flex">
         <CardHeader className="flex flex-col items-center justify-center w-full">
           <h1 className="text-black dark:text-white text-4xl font-bold mb-4">Authentication Error</h1>

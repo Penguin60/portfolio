@@ -27,10 +27,10 @@ export default async function Home() {
     .slice(0, 3);
 
   return (
-    <main className="bg-white dark:bg-zinc-950 text-black dark:text-white items-center flex justify-center mt-3 pb-12 sm:pb-0">
+    <main className="bg-zinc-50 dark:bg-zinc-950 text-black dark:text-white items-center flex justify-center mt-3 pb-12 sm:pb-0">
       <div
         id="card"
-        className="w-[85vw] sm:w-[80vw] md:w-[71vw] lg:w-[62vw] xl:w-[48vw] flex mx-4"
+        className="w-[85vw] sm:w-[80vw] md:w-[60vw] lg:w-[50vw] xl:w-[40vw] flex mx-4"
       >
         <div className="flex flex-col w-full h-full">
           <div className="flex items-center">
@@ -40,8 +40,11 @@ export default async function Home() {
               </p>
               <div className="flex items-center mt-4">
                 <Button asChild variant="ghost" size="icon">
-                  <a href="mailto:radean.rashed@gmail.com" aria-label="Email">
-                    <EnvelopeClosedIcon />
+                  <a
+                    href="https://www.linkedin.com/in/radean-rashed-7aa621362"
+                    aria-label="LinkedIn"
+                  >
+                    <LinkedInLogoIcon />
                   </a>
                 </Button>
                 <Separator orientation="vertical" className="h-4 mx-2" />
@@ -52,11 +55,8 @@ export default async function Home() {
                 </Button>
                 <Separator orientation="vertical" className="h-4 mx-2" />
                 <Button asChild variant="ghost" size="icon">
-                  <a
-                    href="https://www.linkedin.com/in/radean-rashed-7aa621362"
-                    aria-label="LinkedIn"
-                  >
-                    <LinkedInLogoIcon />
+                  <a href="mailto:radean.rashed@gmail.com" aria-label="Email">
+                    <EnvelopeClosedIcon />
                   </a>
                 </Button>
               </div>
@@ -67,9 +67,7 @@ export default async function Home() {
             </Avatar>
           </div>
           <p className="mt-4 text-sm">
-            I&apos;m an 11th grade IB student with a passion for{" "}
-            <strong>programming</strong>, <strong>robotics</strong> and{" "}
-            <strong>mathematics</strong>.
+            I&apos;m an 11th grade IB student interested in programming, robotics and design.
           </p>
           <p className="mt-2 text-sm">
             I love learning new skills, experimenting with technology and
@@ -86,7 +84,7 @@ export default async function Home() {
           {latestItems.map((item) => (
             <div
               key={`${item.type}-${item.id}`}
-              className="w-[85vw] sm:w-[80vw] md:w-[71vw] lg:w-[62vw] xl:w-[48vw] mt-3 bg-zinc-100 dark:bg-zinc-900 rounded-lg p-4 pb-0"
+              className="w-[85vw] sm:w-[80vw] md:w-[60vw] lg:w-[50vw] xl:w-[40vw] mt-3 bg-zinc-100 dark:bg-zinc-900 rounded-lg p-4 pb-0"
             >
               {item.type === "blog" ? (
                 <Link href={`dean/blogs/${item.id}`} className="group">

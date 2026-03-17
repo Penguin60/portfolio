@@ -85,7 +85,7 @@ export function MultiSelect({
       </div>
       <div className="relative mt-2">
         {open && selectables.length > 0 ? (
-          <div className="absolute w-full z-10 top-0 rounded-md bg-white dark:bg-zinc-900 text-popover-foreground shadow-md outline-none animate-in">
+          <div className="absolute w-full z-10 top-0 rounded-md bg-zinc-50 dark:bg-zinc-900 text-popover-foreground shadow-md outline-none animate-in">
             <CommandList>
               <CommandEmpty>
                 <div>

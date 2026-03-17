@@ -10,42 +10,32 @@ export default async function Blogs() {
   const blogs = await getBlogs();
   blogs.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
   return (
-    <main className="bg-white dark:bg-zinc-950 text-black dark:text-white flex justify-start items-center h-full mt-3 pb-4 sm:pb-0">
+    <main className="bg-zinc-50 dark:bg-zinc-950 text-black dark:text-white flex justify-center items-center h-full mt-3 pb-4 sm:pb-0">
       <div className="w-[97vw] flex flex-col justify-start mx-auto items-center overflow-y-auto pb-4">
-        {blogs.map((blog) => (
+        {blogs.map((blog, idx) => (
           <div
             key={blog.id}
-            className="w-[85vw] sm:w-[80vw] md:w-[71vw] lg:w-[62vw] xl:w-[48vw] mt-3 mb-3"
+            className="w-[85vw] sm:w-[80vw] md:w-[60vw] lg:w-[50vw] xl:w-[40vw] mt-3 mb-3"
           >
             <Link href={"blogs/" + blog.id} className="group">
-              <div className="pb-2 flex justify-between items-start">
-                <h3 className="text-black dark:text-white text-2xl font-bold group-hover:underline">
+              <div className="flex items-center justify-between py-2">
+                {/* Year left-aligned */}
+                <span className="text-zinc-400 text-sm min-w-[60px] text-left">
+                  {blog.createdAt.getFullYear()}
+                </span>
+                {/* Title center-aligned */}
+                <span className="text-black dark:text-white text-sm font-normal group-hover:underline flex-1 mx-4">
                   {blog.title}
-                </h3>
-                <div className="flex items-center text-gray-800 dark:text-gray-300 text-sm text-right min-w-fit ml-4 mt-auto">
-                  {blog.createdAt.getDate().toString() +
-                    " " +
-                    blog.createdAt.toLocaleString("default", {
-                      month: "long",
-                    }) +
-                    " " +
-                    blog.createdAt.getFullYear()}
-                </div>
+                </span>
+                {/* Day + Month right-aligned */}
+                <span className="text-zinc-400 text-sm min-w-[80px] text-right">
+                  {blog.createdAt.getDate().toString().padStart(2, "0")}
+                  {" "}
+                  {blog.createdAt.toLocaleString("default", { month: "long" })}
+                </span>
               </div>
-              <div className="pb-0">
-                <div>
-                  <div className="flex justify-between items-start">
-                    <div className="flex-1 text-left">
-                      <h2 className="text-black dark:text-white text-sm mb-6">
-                        {blog.description}
-                      </h2>
-                    </div>
-                  </div>
-                </div>
-                {blog != blogs[blogs.length - 1] && (
-                  <Separator className="my-2" />
-                )}
-              </div>
+              {/* Separator except after last item */}
+              {idx !== blogs.length - 1 && <Separator className="my-2" />}
             </Link>
           </div>
         ))}

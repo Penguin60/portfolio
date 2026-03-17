@@ -21,24 +21,18 @@ function Navbar() {
   };
 
   return (
-    <div className="bg-white dark:bg-zinc-950 text-black dark:text-white m-0 p-0 items-start flex justify-center mx-4">
-      <div className="w-full sm:w-[85vw] md:w-[75vw] lg:w-[65vw] xl:w-[50vw] h-16 flex flex-col justify-center mt-5">
+    <div className="bg-zinc-50 dark:bg-zinc-950 text-black dark:text-white m-0 p-0 items-start flex mx-4">
+      <div className="w-full h-16 flex flex-col justify-center mt-5">
         <div className="flex items-center">
-          <div className="space-x-2">
-            <Link href="/dean" className="font-bold">
-              <Button variant="ghost" className="w-16">
-                Home
-              </Button>
+          <div className="space-x-6">
+            <Link href="/dean" className="w-16 text-sm font-medium text-black dark:text-white hover:underline transition-all underline-offset-4">
+              Home
             </Link>
-            <Link href="/dean/projects" className="font-bold">
-              <Button variant="ghost" className="w-16">
-                Projects
-              </Button>
+            <Link href="/dean/projects" className="w-16 text-sm font-medium text-black dark:text-white hover:underline transition-all underline-offset-4">
+              Projects
             </Link>
-            <Link href="/dean/blogs" className="font-bold">
-              <Button variant="ghost" className="w-16">
-                Blog
-              </Button>
+            <Link href="/dean/blogs" className="w-16 text-sm font-medium text-black dark:text-white hover:underline transition-all underline-offset-4">
+              Blog
             </Link>
           </div>
           <div className="ml-auto">

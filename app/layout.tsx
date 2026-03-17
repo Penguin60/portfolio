@@ -19,7 +19,7 @@ export default function Root({
   return (
     <html lang="en" className="h-full" suppressHydrationWarning>
       <body
-        className={`flex flex-col bg-white dark:bg-zinc-950 h-screen ${inter.className} overflow-y-auto [&::-webkit-scrollbar]:w-2
+        className={`flex flex-col bg-zinc-50 dark:bg-zinc-950 h-screen ${inter.className} overflow-y-auto [&::-webkit-scrollbar]:w-2
   [&::-webkit-scrollbar-track]:bg-gray-100
   [&::-webkit-scrollbar-thumb]:bg-gray-300
   dark:[&::-webkit-scrollbar-track]:bg-neutral-700
@@ -31,7 +31,7 @@ export default function Root({
           enableSystem
           disableTransitionOnChange
         >
-          <main className="h-full text-black dark:text-white flex-1 ">
+            <main className="h-full text-black dark:text-white flex-1 max-w-3xl mx-auto px-4">
             {children}
           </main>
         </ThemeProvider>
