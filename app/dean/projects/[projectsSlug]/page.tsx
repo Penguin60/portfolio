@@ -21,31 +21,33 @@ export default async function ProjectPage({ params }: PageParams) {
 
   return (
     <main
-      className="bg-zinc-50 dark:bg-zinc-950 text-black dark:text-white items-center flex justify-center h-full overflow-y-scroll [&::-webkit-scrollbar]:w-2
+      className="bg-zinc-50 dark:bg-zinc-950 text-black dark:text-white items-center flex justify-center min-h-screen [&::-webkit-scrollbar]:w-2
   [&::-webkit-scrollbar-track]:bg-gray-100
   [&::-webkit-scrollbar-thumb]:bg-gray-300
   dark:[&::-webkit-scrollbar-track]:bg-neutral-700
   dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500"
     >
-      <div className="w-[85vw] sm:w-[80vw] md:w-[60vw] lg:w-[50vw] xl:w-[40vw] h-[88vh] flex-col justify-start mx-auto items-center">
-        <div>
-          <a
-            href={project.link}
-            className="text-black dark:text-white text-3xl font-bold hover:underline"
-          >
-            {project.title}
-          </a>
+      <div className="w-[85vw] sm:w-[80vw] md:w-[60vw] lg:w-[50vw] xl:w-[40vw] flex flex-col mx-4">
+        <div className="flex flex-col w-full">
           <div>
-            {project.tags.map((tag) => (
-              <Badge key={tag} className="mr-0.5 text-2xs">
-                {tag}
-              </Badge>
-            ))}
+            <a
+              href={project.link}
+              className="text-black dark:text-white text-3xl font-bold hover:underline"
+            >
+              {project.title}
+            </a>
+            <div className="mt-2">
+              {project.tags.map((tag) => (
+                <Badge key={tag} className="mr-0.5 text-2xs">
+                  {tag}
+                </Badge>
+              ))}
+            </div>
+            <Separator className="my-4" />
           </div>
-          <Separator className="my-4" />
-        </div>
-        <div className="max-h-[75vh]">
-          <RenderedMarkdown content={project.extendedDescription} />
+          <div>
+            <RenderedMarkdown content={project.extendedDescription} />
+          </div>
         </div>
       </div>
     </main>

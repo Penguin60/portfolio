@@ -27,7 +27,7 @@ export default async function BlogPage({ params }: PageParams) {
   dark:[&::-webkit-scrollbar-track]:bg-neutral-700
   dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500"
     >
-      <div className="w-[85vw] sm:w-[80vw] md:w-[60vw] lg:w-[50vw] xl:w-[40vw] h-[88vh] flex-col justify-start mx-auto items-center">
+      <div className="w-[85vw] sm:w-[80vw] md:w-[60vw] lg:w-[50vw] xl:w-[40vw] flex flex-col mx-4">
         <div>
           <div className="flex justify-between items-center">
             <p className="text-black dark:text-white text-3xl font-bold">
@@ -46,7 +46,7 @@ export default async function BlogPage({ params }: PageParams) {
             </div>
           </div>
         </div>
-        <div className="max-h-[75vh]">
+        <div className="mt-6">
           <RenderedMarkdown content={blog.content} />
         </div>
       </div>

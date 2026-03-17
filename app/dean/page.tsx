@@ -27,10 +27,10 @@ export default async function Home() {
     .slice(0, 3);
 
   return (
-    <main className="bg-zinc-50 dark:bg-zinc-950 text-black dark:text-white items-center flex justify-center mt-3 pb-12 sm:pb-0">
+    <main className="bg-zinc-50 dark:bg-zinc-950 text-black dark:text-white items-start flex justify-start mt-3 pb-12 sm:pb-0">
       <div
         id="card"
-        className="w-[85vw] sm:w-[80vw] md:w-[60vw] lg:w-[50vw] xl:w-[40vw] flex mx-4"
+        className="w-full flex mx-4"
       >
         <div className="flex flex-col w-full h-full">
           <div className="flex items-center">

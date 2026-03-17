@@ -10,8 +10,8 @@ export default async function Projects() {
   const projects = await getProjects();
   projects.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
   return (
-    <main className="bg-zinc-50 dark:bg-zinc-950 text-black dark:text-white flex justify-start items-center h-full mt-3 pb-4 sm:pb-0">
-      <div className="w-[97vw] flex flex-col justify-start mx-auto items-center pb-4">
+    <main className="bg-zinc-50 dark:bg-zinc-950 text-black dark:text-white flex justify-start items-start h-full mt-3 pb-4 sm:pb-0">
+      <div className="w-full flex flex-col justify-start mx-4 pb-4">
         {projects.map((project) => (
           <div
             key={project.id}
