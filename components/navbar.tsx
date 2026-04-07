@@ -25,13 +25,13 @@ function Navbar() {
       <div className="w-full h-16 flex flex-col justify-center mt-5">
         <div className="flex items-center">
           <div className="space-x-6">
-            <Link href="/dean" className="w-16 text-sm font-medium text-black dark:text-white hover:underline transition-all underline-offset-4">
+            <Link href="/" className="w-16 text-sm font-medium text-black dark:text-white hover:underline transition-all underline-offset-4">
               Home
             </Link>
-            <Link href="/dean/projects" className="w-16 text-sm font-medium text-black dark:text-white hover:underline transition-all underline-offset-4">
+            <Link href="/projects" className="w-16 text-sm font-medium text-black dark:text-white hover:underline transition-all underline-offset-4">
               Projects
             </Link>
-            <Link href="/dean/blogs" className="w-16 text-sm font-medium text-black dark:text-white hover:underline transition-all underline-offset-4">
+            <Link href="/blogs" className="w-16 text-sm font-medium text-black dark:text-white hover:underline transition-all underline-offset-4">
               Blog
             </Link>
           </div>

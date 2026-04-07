@@ -11,7 +11,7 @@ export default function Unauthorized() {
         <CardHeader className="flex flex-col items-center justify-center w-full">
           <h1 className="text-black dark:text-white text-4xl font-bold mb-4">Access Denied</h1>
           <p className="text-lg mb-8">You don&apos;t have permission to access the admin area.</p>
-          <Link href="/dean">
+          <Link href="/">
             <Button>Return to Homepage</Button>
           </Link>
         </CardHeader>

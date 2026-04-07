@@ -2,7 +2,9 @@ import Navbar from "@/components/navbar";
 import { ThemeProvider } from "@/components/theme-provider";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
+import "../globals.css";
+import { Toaster } from "@/components/ui/toaster";
+import { CSPostHogProvider } from "../providers";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -11,7 +13,7 @@ export const metadata: Metadata = {
   description: "High schooler developing intricate and functional software.",
 };
 
-export default function Root({
+export default function SiteLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -31,9 +33,13 @@ export default function Root({
           enableSystem
           disableTransitionOnChange
         >
-            <main className="h-full text-black dark:text-white flex-1 max-w-3xl mx-auto px-4">
-            {children}
-          </main>
+          <CSPostHogProvider>
+            <main className="h-full text-black dark:text-white flex-1 max-w-3xl mx-auto px-4 w-full">
+              <Navbar />
+              {children}
+              <Toaster />
+            </main>
+          </CSPostHogProvider>
         </ThemeProvider>
       </body>
     </html>

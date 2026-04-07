@@ -17,7 +17,7 @@ export default async function Projects() {
             key={project.id}
             className="group w-[85vw] sm:w-[80vw] md:w-[60vw] lg:w-[50vw] xl:w-[40vw] mt-3 bg-zinc-100 dark:bg-zinc-900 rounded-lg p-4 pb-4 sm:pb-0 hover:cursor-pointer"
           >
-            <Link href={"projects/" + project.id}>
+            <Link href={"/projects/" + project.id}>
               <div className="pb-2">
                 <h3 className="text-black dark:text-white text-2xl font-bold group-hover:underline">
                   {project.title}

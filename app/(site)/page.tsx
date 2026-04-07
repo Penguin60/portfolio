@@ -62,7 +62,7 @@ export default async function Home() {
               </div>
             </div>
             <Avatar className="ml-auto w-16 h-16">
-              <AvatarImage src="profile.jpeg" alt="Radean's Avatar" />
+              <AvatarImage src="/profile.jpeg" alt="Radean's Avatar" />
               <AvatarFallback>RN</AvatarFallback>
             </Avatar>
           </div>
@@ -82,7 +82,7 @@ export default async function Home() {
               className="w-[85vw] sm:w-[80vw] md:w-[60vw] lg:w-[50vw] xl:w-[40vw] mt-3 bg-zinc-100 dark:bg-zinc-900 rounded-lg p-4 pb-0"
             >
               {item.type === "blog" ? (
-                <Link href={`dean/blogs/${item.id}`} className="group">
+                <Link href={`/blogs/${item.id}`} className="group">
                   <div className="pb-2 flex justify-between items-start">
                     <h3 className="text-black dark:text-white text-md font-bold group-hover:underline">
                       {item.title}{" "}
@@ -111,7 +111,7 @@ export default async function Home() {
                   </div>
                 </Link>
               ) : (
-                <Link href={`dean/projects/${item.id}`} className="group">
+                <Link href={`/projects/${item.id}`} className="group">
                   <div className="pb-2 flex justify-between items-start">
                     <h3 className="text-black dark:text-white text-md font-bold group-hover:underline">
                       {item.title}{" "}

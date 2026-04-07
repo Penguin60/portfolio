@@ -17,7 +17,7 @@ export default async function Blogs() {
             key={blog.id}
             className="w-[85vw] sm:w-[80vw] md:w-[60vw] lg:w-[50vw] xl:w-[40vw] mt-3 mb-3"
           >
-            <Link href={"blogs/" + blog.id} className="group">
+            <Link href={"/blogs/" + blog.id} className="group">
               <div className="flex items-center justify-between py-2">
                 {/* Year left-aligned */}
                 <span className="text-zinc-400 text-sm min-w-[60px] text-left">

@@ -16,7 +16,7 @@ export default function AuthError() {
             <Link href="/auth/signin">
               <Button>Try Again</Button>
             </Link>
-            <Link href="/dean">
+            <Link href="/">
               <Button variant="outline">Return to Homepage</Button>
             </Link>
           </div>
