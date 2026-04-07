@@ -6,6 +6,8 @@ import remarkGfm from "remark-gfm";
 import { CodeBlock } from "@/components/mdx/codeblock";
 import { Callout, StatCard, SimpleChart } from "@/components/mdx/widgets";
 
+export const revalidate = 3600;
+
 type PageParams = {
   params: Promise<{
     blogsSlug: string;

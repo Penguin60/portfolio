@@ -1,6 +1,6 @@
 import ClientPenguin from "@/components/clientpenguin";
 import { Separator } from "@/components/ui/separator";
-import { getBlogs, getProjects } from "@/server/queries";
+import { getLatestBlogs, getLatestProjects } from "@/server/queries";
 import Link from "next/link";
 import {
   EnvelopeClosedIcon,
@@ -10,16 +10,18 @@ import {
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 export default async function Home() {
-  const blogsData = await getBlogs();
-  const projectsData = await getProjects();
+  const [blogsData, projectsData] = await Promise.all([
+    getLatestBlogs(3),
+    getLatestProjects(3),
+  ]);
 
-  const blogs = blogsData.map((blog) => ({ ...blog, type: "blog" }));
+  const blogs = blogsData.map((blog) => ({ ...blog, type: "blog" as const }));
   const projects = projectsData.map((project) => ({
     ...project,
-    type: "project",
+    type: "project" as const,
   }));
 
   const latestItems = [...blogs, ...projects]
@@ -165,7 +167,7 @@ export default async function Home() {
               </h3>
             </div>
           </div>
-          <div className="invisible sm:visible">
+          <div className="hidden sm:block">
             <ClientPenguin />
           </div>
         </div>

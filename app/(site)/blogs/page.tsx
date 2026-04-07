@@ -4,11 +4,10 @@ import { Separator } from "@/components/ui/separator";
 import { getBlogs } from "@/server/queries";
 import Link from "next/link";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 export default async function Blogs() {
   const blogs = await getBlogs();
-  blogs.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
   return (
     <main className="bg-zinc-50 dark:bg-zinc-950 text-black dark:text-white flex justify-start items-start h-full mt-3 pb-4 sm:pb-0">
       <div className="w-full flex flex-col justify-start mx-4 overflow-y-auto pb-4">

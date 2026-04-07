@@ -4,7 +4,7 @@ import "../globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import NextAuthSessionProvider from "@/components/session-provider";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"], display: "swap" });
 
 export const metadata: Metadata = {
   title: "Admin - Radean Rashed",

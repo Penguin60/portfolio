@@ -4,6 +4,8 @@ import { Separator } from "@/components/ui/separator";
 import { getProject } from "@/server/queries";
 import RenderedMarkdown from "@/components/renderedmd/renderedmd";
 
+export const revalidate = 3600;
+
 type PageParams = {
   params: Promise<{
     projectsSlug: string;

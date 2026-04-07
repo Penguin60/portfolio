@@ -4,11 +4,10 @@ import { getProjects } from "@/server/queries";
 import Link from "next/link";
 import Image from "next/image";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 export default async function Projects() {
   const projects = await getProjects();
-  projects.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
   return (
     <main className="bg-zinc-50 dark:bg-zinc-950 text-black dark:text-white flex justify-start items-start h-full mt-3 pb-4 sm:pb-0">
       <div className="w-full flex flex-col justify-start mx-4 pb-4">

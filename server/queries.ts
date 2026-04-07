@@ -1,12 +1,23 @@
 import "server-only";
 
 import { db } from "@/db";
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { projectsTable, blogsTable } from "@/db/schema";
 import { put } from "@vercel/blob";
+import { revalidatePath } from "next/cache";
 
 export async function getProjects() {
-  const projects = await db.query.projectsTable.findMany();
+  const projects = await db.query.projectsTable.findMany({
+    orderBy: [desc(projectsTable.createdAt)],
+  });
+  return projects;
+}
+
+export async function getLatestProjects(limit: number) {
+  const projects = await db.query.projectsTable.findMany({
+    orderBy: [desc(projectsTable.createdAt)],
+    limit,
+  });
   return projects;
 }
 
@@ -30,7 +41,17 @@ export async function getProjectsTags() {
 }
 
 export async function getBlogs() {
-  const blogs = await db.query.blogsTable.findMany();
+  const blogs = await db.query.blogsTable.findMany({
+    orderBy: [desc(blogsTable.createdAt)],
+  });
+  return blogs;
+}
+
+export async function getLatestBlogs(limit: number) {
+  const blogs = await db.query.blogsTable.findMany({
+    orderBy: [desc(blogsTable.createdAt)],
+    limit,
+  });
   return blogs;
 }
 
@@ -66,6 +87,8 @@ export async function createProject(
     description,
     extendedDescription,
   });
+  revalidatePath("/");
+  revalidatePath("/projects");
   return project;
 }
 
@@ -81,5 +104,7 @@ export async function createBlog(
     description,
     contentUrl,
   });
+  revalidatePath("/");
+  revalidatePath("/blogs");
   return blog;
 }

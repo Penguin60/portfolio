@@ -1,7 +1,6 @@
 "use client";
 
 import "./../renderedmd/renderedmd.css";
-import mermaid from "mermaid";
 import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 
@@ -16,24 +15,28 @@ export default function RenderedMarkdown({ content }: { content: string }) {
   }, []);
 
   useEffect(() => {
-    if (!mounted) return;
-    
-    mermaid.initialize({
-      startOnLoad: false,
-      theme: isDarkMode ? "dark" : "default",
-      themeVariables: {
-        darkMode: isDarkMode,
-      },
-      flowchart: {
-        curve: "basis",
-      },
-    });
-  }, [isDarkMode, resolvedTheme, mounted]);
-
-  useEffect(() => {
     if (!mounted || !content) return;
-    
-    mermaid.run();
+    if (!content.includes('class="mermaid"')) return;
+
+    let cancelled = false;
+    import("mermaid").then(({ default: mermaid }) => {
+      if (cancelled) return;
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: isDarkMode ? "dark" : "default",
+        themeVariables: {
+          darkMode: isDarkMode,
+        },
+        flowchart: {
+          curve: "basis",
+        },
+      });
+      mermaid.run();
+    });
+
+    return () => {
+      cancelled = true;
+    };
   }, [content, mounted, isDarkMode, resolvedTheme]);
 
   if (!mounted) {
