@@ -9,12 +9,12 @@ export const revalidate = 3600;
 export default async function Blogs() {
   const blogs = await getBlogs();
   return (
-    <main className="bg-zinc-50 dark:bg-zinc-950 text-black dark:text-white flex justify-start items-start h-full mt-3 pb-4 sm:pb-0">
-      <div className="w-full flex flex-col justify-start mx-4 overflow-y-auto pb-4">
+    <main className="bg-zinc-50 dark:bg-zinc-950 text-black dark:text-white flex justify-start items-start mt-3 pb-4 sm:pb-0 px-4">
+      <div className="w-full flex flex-col justify-start pb-4">
         {blogs.map((blog, idx) => (
           <div
             key={blog.id}
-            className="w-[85vw] sm:w-[80vw] md:w-[60vw] lg:w-[50vw] xl:w-[40vw] mt-3 mb-3"
+            className="w-full mt-3 mb-3"
           >
             <Link href={"/blogs/" + blog.id} className="group">
               <div className="flex items-center justify-between py-2">

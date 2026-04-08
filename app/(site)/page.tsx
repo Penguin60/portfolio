@@ -157,7 +157,7 @@ export default async function Home() {
             <div className="flex items-center justify-between w-full mt-3">
               <h3 className="text-sm font-bold">Watching</h3>
               <div className="flex-1 border-t border-dashed border-zinc-400 mx-2"></div>
-              <h3 className="text-right min-w-fit text-sm">The Bear</h3>
+              <h3 className="text-right min-w-fit text-sm">Adolescence</h3>
             </div>
             <div className="flex items-center justify-between w-full mt-3">
               <h3 className="text-sm font-bold">Developing</h3>
