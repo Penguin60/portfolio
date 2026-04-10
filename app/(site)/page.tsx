@@ -13,9 +13,45 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 export const revalidate = 3600;
 
 export default async function Home() {
-  const [blogsData, projectsData] = await Promise.all([
+  const [blogsData, projectsData, readingData, watchingData, developingData] = await Promise.all([
     getLatestBlogs(3),
     getLatestProjects(3),
+    fetch("https://theca.rrashed.com/v/dean/reading", {
+      next: { revalidate },
+    })
+      .then(async (response) => {
+        if (!response.ok) {
+          return "Abundance";
+        }
+
+        const value = (await response.text()).trim();
+        return value || "Abundance";
+      })
+      .catch(() => "Abundance"),
+    fetch("https://theca.rrashed.com/v/dean/watching", {
+      next: { revalidate },
+    })
+      .then(async (response) => {
+        if (!response.ok) {
+          return "Adolescence";
+        }
+
+        const value = (await response.text()).trim();
+        return value || "Adolescence";
+      })
+      .catch(() => "Adolescence"),
+    fetch("https://theca.rrashed.com/v/dean/developing", {
+      next: { revalidate },
+    })
+      .then(async (response) => {
+        if (!response.ok) {
+          return "Zephyr - AI Drone";
+        }
+
+        const value = (await response.text()).trim();
+        return value || "Zephyr - AI Drone";
+      })
+      .catch(() => "Zephyr - AI Drone"),
   ]);
 
   const blogs = blogsData.map((blog) => ({ ...blog, type: "blog" as const }));
@@ -152,18 +188,18 @@ export default async function Home() {
             <div className="flex items-center justify-between w-full mt-3">
               <h3 className="text-sm font-bold">Reading</h3>
               <div className="flex-1 border-t border-dashed border-zinc-400 mx-2"></div>
-              <h3 className="text-right min-w-fit text-sm">Abundance</h3>
+              <h3 className="text-right min-w-fit text-sm">{readingData}</h3>
             </div>
             <div className="flex items-center justify-between w-full mt-3">
               <h3 className="text-sm font-bold">Watching</h3>
               <div className="flex-1 border-t border-dashed border-zinc-400 mx-2"></div>
-              <h3 className="text-right min-w-fit text-sm">Adolescence</h3>
+              <h3 className="text-right min-w-fit text-sm">{watchingData}</h3>
             </div>
             <div className="flex items-center justify-between w-full mt-3">
               <h3 className="text-sm font-bold">Developing</h3>
               <div className="flex-1 border-t border-dashed border-zinc-400 mx-2"></div>
               <h3 className="text-right min-w-fit text-sm">
-                Zephyr - AI Drone
+                {developingData}
               </h3>
             </div>
           </div>
