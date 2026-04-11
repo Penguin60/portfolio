@@ -16,7 +16,7 @@ export default async function Home() {
   const [blogsData, projectsData, readingData, watchingData, developingData] = await Promise.all([
     getLatestBlogs(3),
     getLatestProjects(3),
-    fetch("https://theca.rrashed.com/v/dean/reading", {
+    fetch("https://theca.rrashed.com/v/Penguin60/reading", {
       next: { revalidate },
     })
       .then(async (response) => {
@@ -28,7 +28,7 @@ export default async function Home() {
         return value || "Abundance";
       })
       .catch(() => "Abundance"),
-    fetch("https://theca.rrashed.com/v/dean/watching", {
+    fetch("https://theca.rrashed.com/v/Penguin60/watching", {
       next: { revalidate },
     })
       .then(async (response) => {
@@ -40,7 +40,7 @@ export default async function Home() {
         return value || "Adolescence";
       })
       .catch(() => "Adolescence"),
-    fetch("https://theca.rrashed.com/v/dean/developing", {
+    fetch("https://theca.rrashed.com/v/Penguin60/developing", {
       next: { revalidate },
     })
       .then(async (response) => {
