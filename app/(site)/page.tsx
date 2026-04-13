@@ -110,14 +110,12 @@ export default async function Home() {
           <p className="mt-2 text-sm">
             I love learning, experimenting and seeing the things I build come to life!
           </p>
-          <br />
-          <br />
-          <h1 className="text-md font-bold text-zinc-400">Latest</h1>
+          <h1 className="text-md font-bold text-zinc-400 mt-8">Latest</h1>
           <Separator className="my-2" />
           {latestItems.map((item) => (
             <div
               key={`${item.type}-${item.id}`}
-              className="w-[85vw] sm:w-[80vw] md:w-[60vw] lg:w-[50vw] xl:w-[40vw] mt-3 bg-zinc-100 dark:bg-zinc-900 rounded-lg p-4 pb-0"
+              className="w-full mt-3 bg-zinc-100 dark:bg-zinc-900 rounded-lg p-4 pb-0"
             >
               {item.type === "blog" ? (
                 <Link href={`/blogs/${item.id}`} className="group">
@@ -180,9 +178,7 @@ export default async function Home() {
               )}
             </div>
           ))}
-          <br />
-          <br />
-          <h1 className="text-md font-bold text-zinc-400">About</h1>
+          <h1 className="text-md font-bold text-zinc-400 mt-8">About</h1>
           <Separator className="my-2" />
           <div>
             <div className="flex items-center justify-between w-full mt-3">
