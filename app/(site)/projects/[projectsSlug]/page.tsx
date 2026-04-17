@@ -22,14 +22,8 @@ export default async function ProjectPage({ params }: PageParams) {
   const project = projects[0];
 
   return (
-    <main
-      className="bg-zinc-50 dark:bg-zinc-950 text-black dark:text-white items-center flex justify-center min-h-screen [&::-webkit-scrollbar]:w-2
-  [&::-webkit-scrollbar-track]:bg-gray-100
-  [&::-webkit-scrollbar-thumb]:bg-gray-300
-  dark:[&::-webkit-scrollbar-track]:bg-neutral-700
-  dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500"
-    >
-      <div className="w-[85vw] sm:w-[80vw] md:w-[60vw] lg:w-[50vw] xl:w-[40vw] flex flex-col mx-4">
+    <main className="bg-zinc-50 dark:bg-zinc-950 text-black dark:text-white flex justify-center">
+      <div className="w-full max-w-[45rem] flex flex-col mx-4">
         <div className="flex flex-col w-full">
           <div>
             <a

@@ -46,14 +46,8 @@ export default async function BlogPage({ params }: PageParams) {
   const mdxSource = await getMdxContent(blog.contentUrl);
 
   return (
-    <main
-      className="bg-zinc-50 dark:bg-zinc-950 text-black dark:text-white items-center flex justify-center h-full overflow-y-scroll [&::-webkit-scrollbar]:w-2
-  [&::-webkit-scrollbar-track]:bg-gray-100
-  [&::-webkit-scrollbar-thumb]:bg-gray-300
-  dark:[&::-webkit-scrollbar-track]:bg-neutral-700
-  dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500"
-    >
-      <div className="w-[85vw] sm:w-[80vw] md:w-[60vw] lg:w-[50vw] xl:w-[40vw] flex flex-col mx-4">
+    <main className="bg-zinc-50 dark:bg-zinc-950 text-black dark:text-white flex justify-center">
+      <div className="w-full max-w-[45rem] flex flex-col mx-4">
         <div>
           <div className="flex justify-between items-center">
             <p className="text-black dark:text-white text-3xl font-bold">
