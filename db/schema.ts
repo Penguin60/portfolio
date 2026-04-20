@@ -21,6 +21,11 @@ export const blogsTable = pgTable('blog_table', {
   createdAt: timestamp('created_at').notNull().defaultNow(),
 });
 
+export const penguinCounterTable = pgTable('penguin_counter_table', {
+  id: serial('id').primaryKey(),
+  count: integer('count').notNull().default(0),
+});
+
 export type InsertProject = typeof projectsTable.$inferInsert;
 export type SelectProject = typeof projectsTable.$inferSelect;
 

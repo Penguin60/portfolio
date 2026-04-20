@@ -1,12 +1,17 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './Penguin.css';
 import Image from 'next/image';
+import { incrementPenguinCount } from '@/server/actions';
+
+type Popup = { id: number; value: number; x: number; y: number; drift: number };
 
 const Penguin: React.FC = () => {
   const [lastPosition, setLastPosition] = useState<{ x: number; y: number } | null>(null);
   const [isMoving, setIsMoving] = useState(false);
+  const [popups, setPopups] = useState<Popup[]>([]);
+  const popupIdRef = useRef(0);
 
   useEffect(() => {
     const penguin = document.getElementById('penguin');
@@ -29,6 +34,23 @@ const Penguin: React.FC = () => {
     const penguin = document.getElementById('penguin');
     if (penguin) {
       setIsMoving(true);
+
+      const rect = penguin.getBoundingClientRect();
+      const offsetX = (Math.random() - 0.5) * 60;
+      const spawnX = rect.left + rect.width / 2 + offsetX;
+      const spawnY = rect.top + rect.height / 3;
+
+      const drift = Math.random() * 2 - 1;
+
+      incrementPenguinCount()
+        .then((newCount) => {
+          const id = ++popupIdRef.current;
+          setPopups((prev) => [...prev, { id, value: newCount, x: spawnX, y: spawnY, drift }]);
+          setTimeout(() => {
+            setPopups((prev) => prev.filter((p) => p.id !== id));
+          }, 1500);
+        })
+        .catch(() => {});
 
       const windowWidth = window.innerWidth;
       const windowHeight = window.innerHeight;
@@ -103,16 +125,27 @@ const Penguin: React.FC = () => {
   };
 
   return (
-    <Image
-      id="penguin"
-      src="/penguin.png"
-      alt="Penguin"
-      className="cursor-pointer"
-      onClick={movePenguin}
-      style={{ position: 'fixed', zIndex: 999 }}
-      width={160}
-      height={160}
-    />
+    <>
+      <Image
+        id="penguin"
+        src="/penguin.png"
+        alt="Penguin"
+        className="cursor-pointer"
+        onClick={movePenguin}
+        style={{ position: 'fixed', zIndex: 999 }}
+        width={160}
+        height={160}
+      />
+      {popups.map((p) => (
+        <span
+          key={p.id}
+          className="penguin-popup"
+          style={{ left: p.x, top: p.y, ['--drift' as string]: p.drift }}
+        >
+          {p.value}
+        </span>
+      ))}
+    </>
   );
 };
 
