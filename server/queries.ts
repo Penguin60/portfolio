@@ -108,3 +108,39 @@ export async function createBlog(
   revalidatePath("/blogs");
   return blog;
 }
+
+export async function updateBlog(
+  id: number,
+  title: string,
+  description: string,
+  contentUrl: string,
+  tags: string[]
+) {
+  const blog = await db
+    .update(blogsTable)
+    .set({ title, description, contentUrl, tags })
+    .where(eq(blogsTable.id, id));
+  revalidatePath("/");
+  revalidatePath("/blogs");
+  revalidatePath(`/blogs/${id}`);
+  return blog;
+}
+
+export async function updateProject(
+  id: number,
+  title: string,
+  link: string,
+  image: string,
+  tags: string[],
+  description: string,
+  extendedDescription: string
+) {
+  const project = await db
+    .update(projectsTable)
+    .set({ title, link, image, tags, description, extendedDescription })
+    .where(eq(projectsTable.id, id));
+  revalidatePath("/");
+  revalidatePath("/projects");
+  revalidatePath(`/projects/${id}`);
+  return project;
+}

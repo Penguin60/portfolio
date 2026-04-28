@@ -1,46 +1,80 @@
-import { getBlogsTags, createBlog } from "@/server/queries";
+import {
+  getBlogsTags,
+  createBlog,
+  getBlogs,
+  getBlog,
+  updateBlog,
+} from "@/server/queries";
 import { put } from "@vercel/blob";
 
-import { Card } from "@/components/ui/card";
+import { MarkdownEditor, type LoadResult } from "@/components/mdeditor/mdeditor";
 
-import { MarkdownEditor } from "@/components/mdeditor/mdeditor";
-
-import "@/components/mdeditor/mdeditor.css";
 async function AdminBlog() {
   const options = await getBlogsTags();
+  const allBlogs = await getBlogs();
+  const posts = allBlogs.map((b) => ({ id: b.id, title: b.title }));
 
-  async function createBlogAction(formData: FormData) {
+  async function submitBlogAction(formData: FormData) {
     "use server";
-    
+
+    const idStr = formData.get("id") as string;
+    const id = idStr ? Number(idStr) : null;
     const title = formData.get("title") as string;
-    const mdxFile = formData.get("mdxFile") as File;
+    const content = formData.get("content") as string;
     const tagsString = formData.get("tags") as string;
     const tags = tagsString ? JSON.parse(tagsString) : [];
     const description = formData.get("description") as string;
 
-    if (!mdxFile || mdxFile.size === 0) {
-      return { success: false, message: "MDX file is required" };
+    if (!content || content.trim().length === 0) {
+      return { success: false, message: "Content is required" };
     }
 
-    // Upload MDX to Vercel Blob
-    const blob = await put(`blogs/${mdxFile.name}`, mdxFile, {
-      access: "public",
-    });
-    
+    const slug =
+      title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)/g, "") || "post";
+
+    const blob = await put(
+      `blogs/${slug}.mdx`,
+      new Blob([content], { type: "text/markdown" }),
+      { access: "public", addRandomSuffix: true }
+    );
+
+    if (id) {
+      await updateBlog(id, title, description, blob.url, tags);
+      return { success: true, message: "Blog updated" };
+    }
     await createBlog(title, description, blob.url, tags);
-    
-    return { success: true, message: "Blog created successfully" };
+    return { success: true, message: "Blog created" };
+  }
+
+  async function loadBlogAction(id: number): Promise<LoadResult | null> {
+    "use server";
+    const rows = await getBlog(id);
+    const blog = rows[0];
+    if (!blog) return null;
+    const res = await fetch(blog.contentUrl, { cache: "no-store" });
+    if (!res.ok) return null;
+    const content = await res.text();
+    return {
+      kind: "blog",
+      id: blog.id,
+      title: blog.title,
+      description: blog.description,
+      tags: blog.tags,
+      content,
+    };
   }
 
   return (
-    <main className="bg-zinc-50 dark:bg-zinc-950 text-black dark:text-white items-center flex justify-center h-full mt-3">
-      <Card
-        id="card"
-        className="relative w-[97vw] h-[88vh] overflow-hidden flex flex-col"
-      >
-        <MarkdownEditor type="blog" options={options} formAction={createBlogAction}/>
-      </Card>
-    </main>
+    <MarkdownEditor
+      type="blog"
+      options={options}
+      posts={posts}
+      formAction={submitBlogAction}
+      loadAction={loadBlogAction}
+    />
   );
 }
 

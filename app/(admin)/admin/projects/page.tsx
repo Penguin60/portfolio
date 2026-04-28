@@ -1,16 +1,23 @@
-import { getProjectsTags, createProject } from "@/server/queries";
+import {
+  getProjectsTags,
+  createProject,
+  getProjects,
+  getProject,
+  updateProject,
+} from "@/server/queries";
 
-import { Card } from "@/components/ui/card";
+import { MarkdownEditor, type LoadResult } from "@/components/mdeditor/mdeditor";
 
-import { MarkdownEditor } from "@/components/mdeditor/mdeditor";
-
-import "@/components/mdeditor/mdeditor.css";
 async function AdminProjects() {
   const options = await getProjectsTags();
+  const allProjects = await getProjects();
+  const posts = allProjects.map((p) => ({ id: p.id, title: p.title }));
 
-  async function createProjectsAction(formData: FormData) {
+  async function submitProjectAction(formData: FormData) {
     "use server";
-    
+
+    const idStr = formData.get("id") as string;
+    const id = idStr ? Number(idStr) : null;
     const title = formData.get("title") as string;
     const link = formData.get("link") as string;
     const image = formData.get("image") as string;
@@ -18,21 +25,55 @@ async function AdminProjects() {
     const tags = tagsString ? JSON.parse(tagsString) : [];
     const description = formData.get("description") as string;
     const extendedDescription = formData.get("extendedDescription") as string;
-    
-    await createProject(title, link, image, tags, description, extendedDescription);
-    
-    return { success: true, message: "Projects created successfully" };
+
+    if (id) {
+      await updateProject(
+        id,
+        title,
+        link,
+        image,
+        tags,
+        description,
+        extendedDescription
+      );
+      return { success: true, message: "Project updated" };
+    }
+    await createProject(
+      title,
+      link,
+      image,
+      tags,
+      description,
+      extendedDescription
+    );
+    return { success: true, message: "Project created" };
+  }
+
+  async function loadProjectAction(id: number): Promise<LoadResult | null> {
+    "use server";
+    const rows = await getProject(id);
+    const project = rows[0];
+    if (!project) return null;
+    return {
+      kind: "project",
+      id: project.id,
+      title: project.title,
+      link: project.link,
+      image: project.image,
+      description: project.description,
+      extendedDescription: project.extendedDescription,
+      tags: project.tags,
+    };
   }
 
   return (
-    <main className="bg-zinc-50 dark:bg-zinc-950 text-black dark:text-white items-center flex justify-center h-full mt-3">
-      <Card
-        id="card"
-        className="relative w-[97vw] h-[88vh] overflow-scroll flex flex-col"
-      >
-        <MarkdownEditor type="projects" options={options} formAction={createProjectsAction}/>
-      </Card>
-    </main>
+    <MarkdownEditor
+      type="project"
+      options={options}
+      posts={posts}
+      formAction={submitProjectAction}
+      loadAction={loadProjectAction}
+    />
   );
 }
 

@@ -1,11 +1,14 @@
 "use client";
 
-import React from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import CodeMirror, { ReactCodeMirrorRef } from "@uiw/react-codemirror";
+import { EditorView, keymap } from "@codemirror/view";
+import { Prec } from "@codemirror/state";
+import { markdown } from "@codemirror/lang-markdown";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "../ui/command";
 
-import { Textarea } from "../ui/textarea";
 import { Separator } from "../ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
-import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
 import { Button } from "../ui/button";
 import {
   Dialog,
@@ -17,35 +20,67 @@ import {
 } from "../ui/dialog";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
+import { Textarea } from "../ui/textarea";
 import { MultiSelect } from "../ui/multiselect";
 import {
   Bold,
   Italic,
   Strikethrough,
-  Heading,
+  Heading1,
+  Heading2,
+  Heading3,
   List,
   ListOrdered,
   ListChecks,
   Quote,
   Code,
+  Code2,
+  Link as LinkIcon,
+  Image as ImageIcon,
+  Table as TableIcon,
+  Plus,
+  Save,
 } from "lucide-react";
-import { useState } from "react";
-import { Marked } from "marked";
-import { markedHighlight } from "marked-highlight";
-import hljs from "highlight.js";
-import "highlight.js/styles/github-dark.css";
-import "./mdeditor.css";
-import RenderedMarkdown from "../renderedmd/renderedmd";
 import { uploadBlob } from "@/server/actions";
+import { SLASH_COMMANDS, fillSnippet, type SlashCommand } from "./slash-commands";
+import { MdxPreview } from "./preview";
+
+type EditorType = "blog" | "project";
+
+export type PostMeta = { id: number; title: string };
+
+export type LoadResult =
+  | {
+      kind: "blog";
+      id: number;
+      title: string;
+      description: string;
+      tags: string[];
+      content: string;
+    }
+  | {
+      kind: "project";
+      id: number;
+      title: string;
+      link: string;
+      image: string;
+      description: string;
+      extendedDescription: string;
+      tags: string[];
+    };
 
 export function MarkdownEditor({
   type,
   options,
+  posts,
   formAction,
+  loadAction,
 }: {
-  type: string;
+  type: EditorType;
   options: string[];
+  posts: PostMeta[];
   formAction: (formData: FormData) => Promise<any>;
+  loadAction: (id: number) => Promise<LoadResult | null>;
 }) {
   const [text, setText] = useState("");
   const [title, setTitle] = useState("");
@@ -54,654 +89,350 @@ export function MarkdownEditor({
   const [description, setDescription] = useState("");
   const [link, setLink] = useState("");
   const [image, setImage] = useState("");
-  const [parsedText, setParsedText] = useState("");
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  async function pasteHandler(e: React.ClipboardEvent<HTMLTextAreaElement>) {
-    const items = e.clipboardData.items;
-    for (let i = 0; i < items.length; i++) {
-      const item = items[i];
-      if (item.kind === "file") {
-        const file = item.getAsFile();
-        if (!file) return;
+  const cmRef = useRef<ReactCodeMirrorRef>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-        try {
-          const formData = new FormData();
-          formData.append("file", file);
+  const [slash, setSlash] = useState<{
+    pos: number;
+    x: number;
+    y: number;
+  } | null>(null);
 
-          const data = await uploadBlob(formData, "blog");
-          if (!data) throw new Error("Upload failed");
+  const isBlog = type === "blog";
+  const blobPath = isBlog ? "blog" : "project";
 
-          const textarea = document.getElementById(
-            "markdownInput"
-          ) as HTMLTextAreaElement;
-          if (textarea && data.url) {
-            const imageMarkdown = `![${file.name}](${data.url})`;
-            const start = textarea.selectionStart;
-            const newText =
-              textarea.value.substring(0, start) +
-              imageMarkdown +
-              textarea.value.substring(start);
+  function resetForm() {
+    setText("");
+    setTitle("");
+    setTags([]);
+    setDescription("");
+    setLink("");
+    setImage("");
+    setEditingId(null);
+  }
 
-            textarea.value = newText;
-            updateText({
-              target: textarea,
-            } as React.ChangeEvent<HTMLTextAreaElement>);
-          }
-        } catch (error) {
-          console.error("Error uploading file:", error);
-        }
+  async function handlePostPick(value: string) {
+    if (value === "new") {
+      resetForm();
+      return;
+    }
+    const id = Number(value);
+    if (!Number.isFinite(id)) return;
+    setLoading(true);
+    try {
+      const result = await loadAction(id);
+      if (!result) return;
+      setEditingId(result.id);
+      setTitle(result.title);
+      setDescription(result.description);
+      setTags(result.tags);
+      if (result.kind === "blog") {
+        setText(result.content);
+      } else {
+        setLink(result.link);
+        setImage(result.image);
+        setText(result.extendedDescription);
       }
+    } finally {
+      setLoading(false);
     }
   }
 
-  function updateText(e: React.ChangeEvent<HTMLTextAreaElement>) {
-    setText(e.target.value);
-  }
+  const view = () => cmRef.current?.view ?? null;
 
-  const updateTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTitle(e.target.value);
-  };
-
-  const updateDescription = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setDescription(e.target.value);
-  };
-
-  const updateLink = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLink(e.target.value);
-  };
-
-  const updateImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setImage(e.target.value);
-  };
-
-  const marked = new Marked(
-    markedHighlight({
-      emptyLangClass: "hljs",
-      langPrefix: "hljs language-",
-      highlight(code, lang, info) {
-        const language = hljs.getLanguage(lang) ? lang : "plaintext";
-        return hljs.highlight(code, { language }).value;
+  const wrapSelection = useCallback((before: string, after: string = before) => {
+    const v = view();
+    if (!v) return;
+    const { from, to } = v.state.selection.main;
+    const selected = v.state.sliceDoc(from, to);
+    const insert = `${before}${selected}${after}`;
+    v.dispatch({
+      changes: { from, to, insert },
+      selection: {
+        anchor: from + before.length,
+        head: from + before.length + selected.length,
       },
-    })
+    });
+    v.focus();
+  }, []);
+
+  const toggleLinePrefix = useCallback((prefix: string) => {
+    const v = view();
+    if (!v) return;
+    const { from, to } = v.state.selection.main;
+    const startLine = v.state.doc.lineAt(from);
+    const endLine = v.state.doc.lineAt(to);
+    const changes: { from: number; to: number; insert: string }[] = [];
+    for (let n = startLine.number; n <= endLine.number; n++) {
+      const line = v.state.doc.line(n);
+      if (line.text.startsWith(prefix)) {
+        changes.push({ from: line.from, to: line.from + prefix.length, insert: "" });
+      } else {
+        changes.push({ from: line.from, to: line.from, insert: prefix });
+      }
+    }
+    const changeSet = v.state.changes(changes);
+    v.dispatch({
+      changes: changeSet,
+      selection: v.state.selection.map(changeSet, 1),
+    });
+    v.focus();
+  }, []);
+
+  const insertBlock = useCallback((insertText: string) => {
+    const v = view();
+    if (!v) return;
+    const { from, to } = v.state.selection.main;
+    const line = v.state.doc.lineAt(from);
+    const needsLeadingNewline = from !== line.from;
+    const prefix = needsLeadingNewline ? "\n" : "";
+    const finalInsert = `${prefix}${insertText}`;
+    v.dispatch({
+      changes: { from, to, insert: finalInsert },
+      selection: { anchor: from + finalInsert.length },
+    });
+    v.focus();
+  }, []);
+
+  const insertSnippetAt = useCallback(
+    (cmd: SlashCommand, replaceFrom: number, replaceTo: number) => {
+      const v = view();
+      if (!v) return;
+      const filled = fillSnippet(cmd.insert);
+      v.dispatch({
+        changes: { from: replaceFrom, to: replaceTo, insert: filled.text },
+        selection: {
+          anchor: replaceFrom + filled.selectionStart,
+          head: replaceFrom + filled.selectionEnd,
+        },
+      });
+      v.focus();
+    },
+    []
   );
 
-  marked.use({
-    renderer: {
-      code: function (code) {
-        if (code.lang == "mermaid")
-          return `<pre class="mermaid">${code.text}</pre>`;
+  const handleSlashSelect = useCallback(
+    (cmd: SlashCommand) => {
+      if (!slash) return;
+      insertSnippetAt(cmd, slash.pos, slash.pos);
+      setSlash(null);
+    },
+    [slash, insertSnippetAt]
+  );
+
+  const closeSlash = useCallback(() => {
+    setSlash(null);
+    view()?.focus();
+  }, []);
+
+  const uploadAndInsertRef = useRef<(file: File) => void>(() => {});
+  uploadAndInsertRef.current = async (file: File) => {
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const data = await uploadBlob(formData, blobPath);
+      if (!data?.url) throw new Error("Upload failed");
+      const v = view();
+      if (!v) return;
+      const insert = `![${file.name}](${data.url})`;
+      const { from, to } = v.state.selection.main;
+      v.dispatch({
+        changes: { from, to, insert },
+        selection: { anchor: from + insert.length },
+      });
+      v.focus();
+    } catch (error) {
+      console.error("Image upload failed:", error);
+    }
+  };
+
+  const uploadAndInsert = useCallback((file: File) => {
+    uploadAndInsertRef.current(file);
+  }, []);
+
+  const editorExtensions = useMemo(() => [
+    markdown(),
+    EditorView.lineWrapping,
+    Prec.highest(
+      keymap.of([
+        {
+          key: "/",
+          run: (v) => {
+            const { from } = v.state.selection.main;
+            const line = v.state.doc.lineAt(from);
+            const before = v.state.doc.sliceString(line.from, from);
+            const isAtStart = before.length === 0 || /\s$/.test(before);
+            if (!isAtStart) return false;
+            const coords = v.coordsAtPos(from);
+            if (!coords) return false;
+            setSlash({ pos: from, x: coords.left, y: coords.bottom });
+            return true;
+          },
+        },
+      ])
+    ),
+    EditorView.domEventHandlers({
+      paste: (event, v) => {
+        const items = event.clipboardData?.items;
+        if (!items) return false;
+        for (let i = 0; i < items.length; i++) {
+          const item = items[i];
+          if (item.kind === "file") {
+            const file = item.getAsFile();
+            if (file) {
+              event.preventDefault();
+              uploadAndInsert(file);
+              return true;
+            }
+          }
+        }
         return false;
       },
-    },
-  });
+      drop: (event, v) => {
+        const files = event.dataTransfer?.files;
+        if (!files || files.length === 0) return false;
+        const file = files[0];
+        if (!file.type.startsWith("image/")) return false;
+        event.preventDefault();
+        uploadAndInsert(file);
+        return true;
+      },
+    }),
+    EditorView.theme({
+      "&": { height: "100%", fontSize: "0.95rem" },
+      ".cm-scroller": { fontFamily: "var(--font-geist-mono, ui-monospace, SFMono-Regular, monospace)" },
+      "&.cm-focused": { outline: "none" },
+    }),
+  ], []);
 
-  async function populatePreview() {
-    const html = await marked.parse(text);
-
-    setParsedText(html);
-  }
-
-  function bold() {
-    const textarea = document.getElementById(
-      "markdownInput"
-    ) as HTMLTextAreaElement;
-    if (!textarea) return;
-
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
-    const text = textarea.value;
-    const selectedText = text.substring(start, end);
-    const beforeText = text.substring(0, start);
-    const afterText = text.substring(end);
-
-    const isBold =
-      start >= 2 &&
-      end + 2 <= text.length &&
-      text.substring(start - 2, start) === "**" &&
-      text.substring(end, end + 2) === "**";
-
-    if (isBold) {
-      const newText = `${text.substring(
-        0,
-        start - 2
-      )}${selectedText}${text.substring(end + 2)}`;
-      textarea.value = newText;
-
-      if (start === end) {
-        textarea.selectionStart = textarea.selectionEnd = start - 2;
-      } else {
-        textarea.selectionStart = start - 2;
-        textarea.selectionEnd = end - 2;
-      }
-    } else {
-      if (start === end) {
-        const newText = `${beforeText}****${afterText}`;
-        textarea.value = newText;
-        textarea.selectionStart = textarea.selectionEnd = start + 2;
-      } else {
-        const newText = `${beforeText}**${selectedText}**${afterText}`;
-        textarea.value = newText;
-        textarea.selectionStart = start + 2;
-        textarea.selectionEnd = end + 2;
-      }
+  async function handleFormAction(formData: FormData) {
+    formData.set("content", text);
+    formData.set("title", title);
+    formData.set("description", description);
+    formData.set("tags", JSON.stringify(tags));
+    if (!isBlog) {
+      formData.set("link", link);
+      formData.set("image", image);
+      formData.set("extendedDescription", text);
     }
-
-    textarea.focus();
-    updateText({ target: textarea } as React.ChangeEvent<HTMLTextAreaElement>);
-  }
-
-  function italicize() {
-    const textarea = document.getElementById(
-      "markdownInput"
-    ) as HTMLTextAreaElement;
-    if (!textarea) return;
-
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
-    const text = textarea.value;
-    const selectedText = text.substring(start, end);
-    const beforeText = text.substring(0, start);
-    const afterText = text.substring(end);
-
-    const isBoldItalic =
-      start >= 3 &&
-      end + 3 <= text.length &&
-      text.substring(start - 3, start) === "***" &&
-      text.substring(end, end + 3) === "***";
-
-    const isPureItalic =
-      start >= 1 &&
-      end + 1 <= text.length &&
-      text.charAt(start - 1) === "*" &&
-      text.charAt(end) === "*" &&
-      (start <= 1 || text.charAt(start - 2) !== "*") &&
-      (end + 1 >= text.length || text.charAt(end + 1) !== "*");
-
-    if (isBoldItalic) {
-      const newText = `${text.substring(
-        0,
-        start - 3
-      )}**${selectedText}**${text.substring(end + 3)}`;
-      textarea.value = newText;
-
-      if (start === end) {
-        textarea.selectionStart = textarea.selectionEnd = start - 1;
-      } else {
-        textarea.selectionStart = start - 1;
-        textarea.selectionEnd = end - 1;
-      }
-    } else if (isPureItalic) {
-      const newText = `${text.substring(
-        0,
-        start - 1
-      )}${selectedText}${text.substring(end + 1)}`;
-      textarea.value = newText;
-
-      if (start === end) {
-        textarea.selectionStart = textarea.selectionEnd = start - 1;
-      } else {
-        textarea.selectionStart = start - 1;
-        textarea.selectionEnd = end - 1;
-      }
-    } else {
-      const isBold =
-        start >= 2 &&
-        end + 2 <= text.length &&
-        text.substring(start - 2, start) === "**" &&
-        text.substring(end, end + 2) === "**";
-
-      if (isBold) {
-        const newText = `${text.substring(
-          0,
-          start - 2
-        )}***${selectedText}***${text.substring(end + 2)}`;
-        textarea.value = newText;
-
-        if (start === end) {
-          textarea.selectionStart = textarea.selectionEnd = start + 1;
-        } else {
-          textarea.selectionStart = start + 1;
-          textarea.selectionEnd = end + 1;
-        }
-      } else {
-        if (start === end) {
-          const newText = `${beforeText}**${afterText}`;
-          textarea.value = newText;
-          textarea.selectionStart = textarea.selectionEnd = start + 1;
-        } else {
-          const newText = `${beforeText}*${selectedText}*${afterText}`;
-          textarea.value = newText;
-          textarea.selectionStart = start + 1;
-          textarea.selectionEnd = end + 1;
-        }
-      }
+    if (editingId !== null) {
+      formData.set("id", String(editingId));
     }
-
-    updateText({ target: textarea } as React.ChangeEvent<HTMLTextAreaElement>);
-    textarea.focus();
-  }
-
-  function strikethrough() {
-    const textarea = document.getElementById(
-      "markdownInput"
-    ) as HTMLTextAreaElement;
-    if (!textarea) return;
-
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
-    const text = textarea.value;
-    const selectedText = text.substring(start, end);
-    const beforeText = text.substring(0, start);
-    const afterText = text.substring(end);
-
-    const isStrikethrough =
-      start >= 2 &&
-      end + 2 <= text.length &&
-      text.substring(start - 2, start) === "~~" &&
-      text.substring(end, end + 2) === "~~";
-
-    if (isStrikethrough) {
-      const newText = `${text.substring(
-        0,
-        start - 2
-      )}${selectedText}${text.substring(end + 2)}`;
-      textarea.value = newText;
-
-      if (start === end) {
-        textarea.selectionStart = textarea.selectionEnd = start - 2;
-      } else {
-        textarea.selectionStart = start - 2;
-        textarea.selectionEnd = end - 2;
-      }
-    } else {
-      if (start === end) {
-        const newText = `${beforeText}~~~~${afterText}`;
-        textarea.value = newText;
-        textarea.selectionStart = textarea.selectionEnd = start + 2;
-      } else {
-        const newText = `${beforeText}~~${selectedText}~~${afterText}`;
-        textarea.value = newText;
-        textarea.selectionStart = start + 2;
-        textarea.selectionEnd = end + 2;
-      }
-    }
-
-    updateText({ target: textarea } as React.ChangeEvent<HTMLTextAreaElement>);
-    textarea.focus();
-  }
-
-  function codeblock() {
-    const textarea = document.getElementById(
-      "markdownInput"
-    ) as HTMLTextAreaElement;
-    if (!textarea) return;
-
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
-    const text = textarea.value;
-    const selectedText = text.substring(start, end);
-    const beforeText = text.substring(0, start);
-    const afterText = text.substring(end);
-
-    const isCodeblock =
-      start >= 3 &&
-      end + 3 <= text.length &&
-      text.substring(start - 3, start) === "```" &&
-      text.substring(end, end + 3) === "```";
-
-    const isInlineCodeBlock =
-      start >= 1 &&
-      end + 1 <= text.length &&
-      text.charAt(start - 1) === "`" &&
-      text.charAt(end) === "`";
-
-    if (isCodeblock) {
-      const newText = `${text.substring(
-        0,
-        start - 3
-      )}${selectedText}${text.substring(end + 3)}`;
-      textarea.value = newText;
-
-      if (start === end) {
-        textarea.selectionStart = textarea.selectionEnd = start - 3;
-      } else {
-        textarea.selectionStart = start - 3;
-        textarea.selectionEnd = end - 3;
-      }
-    } else if (isInlineCodeBlock) {
-      const newText = `${text.substring(
-        0,
-        start - 1
-      )}${selectedText}${text.substring(end + 1)}`;
-      textarea.value = newText;
-
-      if (start === end) {
-        textarea.selectionStart = textarea.selectionEnd = start - 1;
-      } else {
-        textarea.selectionStart = start - 1;
-        textarea.selectionEnd = end - 1;
-      }
-    } else {
-      const lastNewlineBeforeStart = beforeText.lastIndexOf("\n");
-      const firstNewlineAfterEnd = afterText.indexOf("\n");
-
-      const textBeforeOnSameLine =
-        lastNewlineBeforeStart === -1
-          ? beforeText
-          : beforeText.substring(lastNewlineBeforeStart + 1);
-
-      const textAfterOnSameLine =
-        firstNewlineAfterEnd === -1
-          ? afterText
-          : afterText.substring(0, firstNewlineAfterEnd);
-
-      const hasTextOnSameLine =
-        textBeforeOnSameLine.trim().length > 0 ||
-        textAfterOnSameLine.trim().length > 0;
-
-      const isInline = hasTextOnSameLine && !selectedText.includes("\n");
-
-      if (isInline) {
-        if (start == end) {
-          const newText = `${beforeText}\`${selectedText}\`${afterText}`;
-          textarea.value = newText;
-          textarea.selectionStart = textarea.selectionEnd = start + 1;
-        } else {
-          const newText = `${beforeText}\`${selectedText}\`${afterText}`;
-          textarea.value = newText;
-          textarea.selectionStart = start + 1;
-          textarea.selectionEnd = end + 1;
-        }
-      } else {
-        if (start === end) {
-          const newText = `${beforeText}\`\`\`\n\n\`\`\`${afterText}`;
-          textarea.value = newText;
-          textarea.selectionStart = textarea.selectionEnd = start + 4;
-        } else {
-          const newText = `${beforeText}\`\`\`\n${selectedText}\n\`\`\`${afterText}`;
-          textarea.value = newText;
-          textarea.selectionStart = start + 4;
-          textarea.selectionEnd = end + 4;
-        }
-      }
-    }
-
-    updateText({ target: textarea } as React.ChangeEvent<HTMLTextAreaElement>);
-    textarea.focus();
-  }
-
-  function heading() {
-    const textarea = document.getElementById(
-      "markdownInput"
-    ) as HTMLTextAreaElement;
-    if (!textarea) return;
-
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
-    const text = textarea.value;
-    const selectedText = text.substring(start, end);
-    const afterText = text.substring(end);
-
-    const isHeading1 = start >= 2 && text.substring(start - 2, start) === "# ";
-
-    const isHeading2 = start >= 3 && text.substring(start - 3, start) === "## ";
-
-    const isHeading3 =
-      start >= 4 && text.substring(start - 4, start) === "### ";
-
-    if (isHeading1 && !isHeading2 && !isHeading3) {
-      const newText = `${text.substring(
-        0,
-        start - 2
-      )}${selectedText}${text.substring(end)}`;
-      textarea.value = newText;
-
-      if (start === end) {
-        textarea.selectionStart = textarea.selectionEnd = start - 2;
-      } else {
-        textarea.selectionStart = start - 2;
-        textarea.selectionEnd = end - 2;
-      }
-    } else if (isHeading2 && !isHeading3) {
-      const newText = `${text.substring(
-        0,
-        start - 3
-      )}# ${selectedText}${text.substring(end)}`;
-      textarea.value = newText;
-
-      if (start === end) {
-        textarea.selectionStart = textarea.selectionEnd = start - 1;
-      } else {
-        textarea.selectionStart = start - 1;
-        textarea.selectionEnd = end - 1;
-      }
-    } else if (isHeading3) {
-      const newText = `${text.substring(
-        0,
-        start - 4
-      )}## ${selectedText}${text.substring(end)}`;
-      textarea.value = newText;
-
-      if (start === end) {
-        textarea.selectionStart = textarea.selectionEnd = start - 1;
-      } else {
-        textarea.selectionStart = start - 1;
-        textarea.selectionEnd = end - 1;
-      }
-    } else {
-      if (start === end) {
-        const newText = `### ${selectedText}${afterText}`;
-        textarea.value = newText;
-        textarea.selectionStart = textarea.selectionEnd = start + 4;
-      } else {
-        const newText = `### ${selectedText}${afterText}`;
-        textarea.value = newText;
-        textarea.selectionStart = start + 4;
-        textarea.selectionEnd = end + 4;
-      }
-    }
-
-    updateText({ target: textarea } as React.ChangeEvent<HTMLTextAreaElement>);
-    textarea.focus();
-  }
-
-  function quote() {
-    const textarea = document.getElementById(
-      "markdownInput"
-    ) as HTMLTextAreaElement;
-    if (!textarea) return;
-
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
-    const text = textarea.value;
-    const selectedText = text.substring(start, end);
-    const beforeText = text.substring(0, start);
-    const afterText = text.substring(end);
-
-    const isQuote = start >= 2 && text.substring(start - 2, start) === "> ";
-
-    if (isQuote) {
-      const newText = `${text.substring(
-        0,
-        start - 2
-      )}${selectedText}${text.substring(end + 2)}`;
-      textarea.value = newText;
-
-      if (start === end) {
-        textarea.selectionStart = textarea.selectionEnd = start - 2;
-      } else {
-        textarea.selectionStart = start - 2;
-        textarea.selectionEnd = end - 2;
-      }
-    } else {
-      if (start === end) {
-        const newText = `${beforeText}> ${selectedText}${afterText}`;
-        textarea.value = newText;
-        textarea.selectionStart = textarea.selectionEnd = start + 2;
-      } else {
-        const newText = `${beforeText}> ${selectedText}${afterText}`;
-        textarea.value = newText;
-        textarea.selectionStart = start + 2;
-        textarea.selectionEnd = end + 2;
-      }
-    }
-
-    updateText({ target: textarea } as React.ChangeEvent<HTMLTextAreaElement>);
-    textarea.focus();
+    await formAction(formData);
+    resetForm();
+    setLocalOptions(options);
   }
 
   function tagCreationHandler(name: string) {
-    setTags((prevTags) => {
-      return [...prevTags, name];
-    });
-    setLocalOptions((prevOptions) => {
-      return [...prevOptions, name];
-    });
-  }
-
-  const isBlog = type === "blog";
-
-  async function handleSubmit(formData: FormData) {
-    try {
-      if (isBlog) {
-        formData.set("tags", JSON.stringify(tags));
-        formData.set("title", title);
-        formData.set("description", description);
-
-        await formAction(formData);
-      } else {
-        const html = await marked.parse(text);
-
-        formData.set("extendedDescription", html);
-        formData.set("tags", JSON.stringify(tags));
-        formData.set("title", title);
-        formData.set("description", description);
-        formData.set("link", link);
-        formData.set("image", image);
-
-        await formAction(formData);
-      }
-
-      setText("");
-      setTitle("");
-      setTags([]);
-      setDescription("");
-      setLocalOptions(options);
-      setLink("");
-      setImage("");
-    } catch (error) {
-      console.error("Error in handleSubmit:", error);
-    }
+    setTags((prev) => [...prev, name]);
+    setLocalOptions((prev) => [...prev, name]);
   }
 
   return (
     <Tabs defaultValue="code" className="flex flex-col h-full">
-      <div className="flex items-center justify-between px-4 pt-4">
+      <div className="flex items-center gap-3 pl-[1.5vw] pr-4 pt-4">
         <h2 className="font-semibold text-lg">{isBlog ? "Blog" : "Project"}</h2>
+        <select
+          value={editingId === null ? "new" : String(editingId)}
+          onChange={(e) => handlePostPick(e.target.value)}
+          disabled={loading}
+          className="h-9 rounded-md border bg-white dark:bg-zinc-900 px-2 text-sm max-w-[20rem]"
+        >
+          <option value="new">+ New {isBlog ? "blog" : "project"}</option>
+          {posts.map((p) => (
+            <option key={p.id} value={p.id}>
+              {p.title}
+            </option>
+          ))}
+        </select>
+        {loading && <span className="text-xs text-zinc-500">Loading…</span>}
         <TabsList className="ml-auto">
           <TabsTrigger value="code">Code</TabsTrigger>
-          <TabsTrigger value="preview" onClick={populatePreview}>
-            Preview
-          </TabsTrigger>
+          <TabsTrigger value="preview">Preview</TabsTrigger>
         </TabsList>
       </div>
 
-      <TabsContent value="code" className="flex-grow mt-0">
+      <TabsContent value="code" className="flex-grow mt-0 min-h-0">
         <Separator className="mt-3" />
-        <div className="flex gap-4 items-center px-4 h-full">
-          <Textarea
-            placeholder="Start writing..."
-            className="min-h-96 h-[95%] flex-1 p-4"
-            id="markdownInput"
-            onChange={updateText}
-            onPaste={pasteHandler}
-            value={text}
-            name="content"
-          />
-          <div className="flex flex-col justify-between h-[95%]">
-            <div className="flex flex-col gap-3">
-              <ToggleGroup type="multiple" orientation="vertical">
-                <ToggleGroupItem
-                  value="heading1"
-                  aria-label="Heading 1"
-                  onClick={heading}
-                >
-                  <Heading className="h-4 w-4" />
-                </ToggleGroupItem>
-                <ToggleGroupItem
-                  value="heading2"
-                  aria-label="Heading 2"
-                  onClick={quote}
-                >
-                  <Quote className="h-4 w-4" />
-                </ToggleGroupItem>
-                <ToggleGroupItem
-                  value="heading3"
-                  aria-label="Heading 3"
-                  onClick={codeblock}
-                >
-                  <Code className="h-4 w-4" />
-                </ToggleGroupItem>
-              </ToggleGroup>
-              <ToggleGroup type="multiple" orientation="vertical">
-                <ToggleGroupItem
-                  value="bold"
-                  aria-label="Toggle bold"
-                  onClick={bold}
-                >
-                  <Bold className="h-4 w-4" />
-                </ToggleGroupItem>
-                <ToggleGroupItem
-                  value="italic"
-                  aria-label="Toggle italic"
-                  onClick={italicize}
-                >
-                  <Italic className="h-4 w-4" />
-                </ToggleGroupItem>
-                <ToggleGroupItem
-                  value="strikethrough"
-                  aria-label="Toggle strikethrough"
-                  onClick={strikethrough}
-                >
-                  <Strikethrough className="h-4 w-4" />
-                </ToggleGroupItem>
-              </ToggleGroup>
-              <ToggleGroup type="multiple" orientation="vertical">
-                <ToggleGroupItem value="list" aria-label="Toggle list">
-                  <List className="h-4 w-4" />
-                </ToggleGroupItem>
-                <ToggleGroupItem
-                  value="orderedlist"
-                  aria-label="Toggle ordered list"
-                >
-                  <ListOrdered className="h-4 w-4" />
-                </ToggleGroupItem>
-                <ToggleGroupItem
-                  value="checkedlist"
-                  aria-label="Toggle checked list"
-                >
-                  <ListChecks className="h-4 w-4" />
-                </ToggleGroupItem>
-              </ToggleGroup>
-            </div>
+        <div className="flex gap-4 items-stretch pl-[1.5vw] pr-4 h-full pb-4 pt-2">
+          <div className="relative flex-1 min-w-0 border rounded-md overflow-hidden bg-white dark:bg-zinc-900">
+            <CodeMirror
+              ref={cmRef}
+              value={text}
+              onChange={setText}
+              extensions={editorExtensions}
+              height="100%"
+              basicSetup={{
+                lineNumbers: false,
+                foldGutter: false,
+                highlightActiveLine: false,
+              }}
+              className="h-full"
+            />
+            {slash && (
+              <SlashPopover
+                x={slash.x}
+                y={slash.y}
+                onSelect={handleSlashSelect}
+                onClose={closeSlash}
+              />
+            )}
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) uploadAndInsert(file);
+                e.target.value = "";
+              }}
+            />
+          </div>
+          <Toolbar
+            onBold={() => wrapSelection("**")}
+            onItalic={() => wrapSelection("*")}
+            onStrike={() => wrapSelection("~~")}
+            onH1={() => toggleLinePrefix("# ")}
+            onH2={() => toggleLinePrefix("## ")}
+            onH3={() => toggleLinePrefix("### ")}
+            onUl={() => toggleLinePrefix("- ")}
+            onOl={() => toggleLinePrefix("1. ")}
+            onTask={() => toggleLinePrefix("- [ ] ")}
+            onQuote={() => toggleLinePrefix("> ")}
+            onInlineCode={() => wrapSelection("`")}
+            onCodeBlock={() => insertBlock("```ts\n\n```")}
+            onLink={() => wrapSelection("[", "](url)")}
+            onImage={() => fileInputRef.current?.click()}
+            onTable={() => insertBlock("| col | col |\n| --- | --- |\n| val | val |")}
+          >
             <Dialog>
               <DialogTrigger asChild>
-                <Button className="w-full mt-2">Create</Button>
+                <button
+                  type="button"
+                  aria-label={editingId !== null ? "Save changes" : `Create new ${isBlog ? "blog" : "project"}`}
+                  title={editingId !== null ? "Save changes" : `Create new ${isBlog ? "blog" : "project"}`}
+                  className="h-9 w-9 mt-2 rounded-md flex items-center justify-center bg-zinc-900 text-white hover:bg-zinc-700 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300 transition-colors"
+                >
+                  {editingId !== null ? (
+                    <Save className="h-4 w-4" />
+                  ) : (
+                    <Plus className="h-4 w-4" />
+                  )}
+                </button>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>{isBlog ? "Blog Creation" : "Project Creation"}</DialogTitle>
+                  <DialogTitle>
+                    {editingId !== null
+                      ? `Edit ${isBlog ? "Blog" : "Project"}`
+                      : `${isBlog ? "Blog" : "Project"} Creation`}
+                  </DialogTitle>
                 </DialogHeader>
-                <form
-                  action={formAction}
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    const form = e.currentTarget;
-                    const formData = new FormData(form);
-
-                    handleSubmit(formData);
-                  }}
-                >
+                <form action={handleFormAction}>
                   <div className="grid gap-5 py-4">
                     <div>
                       <Label htmlFor="title">Title</Label>
@@ -710,7 +441,7 @@ export function MarkdownEditor({
                         name="title"
                         placeholder="Title"
                         value={title}
-                        onChange={updateTitle}
+                        onChange={(e) => setTitle(e.target.value)}
                       />
                     </div>
                     {!isBlog && (
@@ -722,7 +453,7 @@ export function MarkdownEditor({
                             name="link"
                             placeholder="Link"
                             value={link}
-                            onChange={updateLink}
+                            onChange={(e) => setLink(e.target.value)}
                           />
                         </div>
                         <div>
@@ -732,7 +463,7 @@ export function MarkdownEditor({
                             name="image"
                             placeholder="Image"
                             value={image}
-                            onChange={updateImage}
+                            onChange={(e) => setImage(e.target.value)}
                           />
                         </div>
                       </>
@@ -759,22 +490,9 @@ export function MarkdownEditor({
                         name="description"
                         placeholder="Description"
                         value={description}
-                        onChange={updateDescription}
+                        onChange={(e) => setDescription(e.target.value)}
                       />
                     </div>
-                    {isBlog && (
-                      <div>
-                        <Label htmlFor="mdxFile">MDX File</Label>
-                        <Input
-                          id="mdxFile"
-                          name="mdxFile"
-                          type="file"
-                          accept=".mdx"
-                          required
-                        />
-                      </div>
-                    )}
-                    {!isBlog && <input type="hidden" name="content" value={text} />}
                     <DialogClose asChild>
                       <Button type="submit">Submit</Button>
                     </DialogClose>
@@ -782,7 +500,7 @@ export function MarkdownEditor({
                 </form>
               </DialogContent>
             </Dialog>
-          </div>
+          </Toolbar>
         </div>
       </TabsContent>
       <TabsContent
@@ -790,10 +508,189 @@ export function MarkdownEditor({
         className="flex-grow mt-0 flex flex-col min-h-0"
       >
         <Separator className="mt-3" />
-        <div className="flex-1 overflow-scroll px-4">
-          <RenderedMarkdown content={parsedText} />
+        <div className="flex-1 overflow-auto px-4 pb-4">
+          <MdxPreview source={text} />
         </div>
       </TabsContent>
     </Tabs>
+  );
+}
+
+function Toolbar(props: {
+  onBold: () => void;
+  onItalic: () => void;
+  onStrike: () => void;
+  onH1: () => void;
+  onH2: () => void;
+  onH3: () => void;
+  onUl: () => void;
+  onOl: () => void;
+  onTask: () => void;
+  onQuote: () => void;
+  onInlineCode: () => void;
+  onCodeBlock: () => void;
+  onLink: () => void;
+  onImage: () => void;
+  onTable: () => void;
+  children?: React.ReactNode;
+}) {
+  const groups: { label: string; items: { icon: React.ReactNode; aria: string; onClick: () => void }[] }[] = [
+    {
+      label: "Headings",
+      items: [
+        { icon: <Heading1 className="h-4 w-4" />, aria: "Heading 1", onClick: props.onH1 },
+        { icon: <Heading2 className="h-4 w-4" />, aria: "Heading 2", onClick: props.onH2 },
+        { icon: <Heading3 className="h-4 w-4" />, aria: "Heading 3", onClick: props.onH3 },
+      ],
+    },
+    {
+      label: "Inline",
+      items: [
+        { icon: <Bold className="h-4 w-4" />, aria: "Bold", onClick: props.onBold },
+        { icon: <Italic className="h-4 w-4" />, aria: "Italic", onClick: props.onItalic },
+        { icon: <Strikethrough className="h-4 w-4" />, aria: "Strikethrough", onClick: props.onStrike },
+        { icon: <Code className="h-4 w-4" />, aria: "Inline code", onClick: props.onInlineCode },
+      ],
+    },
+    {
+      label: "Blocks",
+      items: [
+        { icon: <Quote className="h-4 w-4" />, aria: "Quote", onClick: props.onQuote },
+        { icon: <Code2 className="h-4 w-4" />, aria: "Code block", onClick: props.onCodeBlock },
+        { icon: <List className="h-4 w-4" />, aria: "Bulleted list", onClick: props.onUl },
+        { icon: <ListOrdered className="h-4 w-4" />, aria: "Ordered list", onClick: props.onOl },
+        { icon: <ListChecks className="h-4 w-4" />, aria: "Task list", onClick: props.onTask },
+      ],
+    },
+    {
+      label: "Insert",
+      items: [
+        { icon: <LinkIcon className="h-4 w-4" />, aria: "Link", onClick: props.onLink },
+        { icon: <ImageIcon className="h-4 w-4" />, aria: "Image", onClick: props.onImage },
+        { icon: <TableIcon className="h-4 w-4" />, aria: "Table", onClick: props.onTable },
+      ],
+    },
+  ];
+  return (
+    <div className="flex flex-col justify-between w-12 shrink-0">
+      <div className="flex flex-col gap-3">
+        {groups.map((group, gi) => (
+          <div key={gi} className="flex flex-col gap-1">
+            {gi > 0 && <Separator className="my-1" />}
+            {group.items.map((item, ii) => (
+              <button
+                key={ii}
+                type="button"
+                aria-label={item.aria}
+                title={item.aria}
+                onClick={item.onClick}
+                className="h-9 w-9 rounded-md flex items-center justify-center hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+              >
+                {item.icon}
+              </button>
+            ))}
+          </div>
+        ))}
+      </div>
+      {props.children}
+    </div>
+  );
+}
+
+function SlashPopover({
+  x,
+  y,
+  onSelect,
+  onClose,
+}: {
+  x: number;
+  y: number;
+  onSelect: (cmd: SlashCommand) => void;
+  onClose: () => void;
+}) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
+
+  useEffect(() => {
+    function onPointer(e: PointerEvent) {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        onClose();
+      }
+    }
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        onClose();
+      }
+    }
+    document.addEventListener("pointerdown", onPointer);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("pointerdown", onPointer);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [onClose]);
+
+  const standard = SLASH_COMMANDS.filter((c) => c.group === "standard");
+  const components = SLASH_COMMANDS.filter((c) => c.group === "component");
+
+  const maxX = typeof window !== "undefined" ? window.innerWidth - 300 : x;
+  const maxY = typeof window !== "undefined" ? window.innerHeight - 360 : y;
+  const left = Math.min(x, maxX);
+  const top = Math.min(y + 4, maxY);
+
+  return (
+    <div
+      ref={containerRef}
+      className="fixed z-50 w-72 rounded-lg border bg-white dark:bg-zinc-950 shadow-lg overflow-hidden"
+      style={{ left, top }}
+    >
+      <Command>
+        <CommandInput
+          ref={inputRef}
+          placeholder="Search components..."
+          className="h-9 px-3 bg-transparent outline-none text-sm w-full"
+        />
+        <CommandList>
+          <CommandEmpty>No matches</CommandEmpty>
+          <CommandGroup heading="Standard">
+            {standard.map((cmd) => (
+              <CommandItem
+                key={cmd.id}
+                value={`${cmd.label} ${(cmd.keywords ?? []).join(" ")}`}
+                onSelect={() => onSelect(cmd)}
+              >
+                <span className="flex-1">{cmd.label}</span>
+                {cmd.hint && (
+                  <span className="ml-2 text-xs text-zinc-500 font-mono">
+                    {cmd.hint}
+                  </span>
+                )}
+              </CommandItem>
+            ))}
+          </CommandGroup>
+          <CommandGroup heading="Components">
+            {components.map((cmd) => (
+              <CommandItem
+                key={cmd.id}
+                value={`${cmd.label} ${(cmd.keywords ?? []).join(" ")}`}
+                onSelect={() => onSelect(cmd)}
+              >
+                <span className="flex-1">{cmd.label}</span>
+                {cmd.hint && (
+                  <span className="ml-2 text-xs text-zinc-500 font-mono">
+                    {cmd.hint}
+                  </span>
+                )}
+              </CommandItem>
+            ))}
+          </CommandGroup>
+        </CommandList>
+      </Command>
+    </div>
   );
 }

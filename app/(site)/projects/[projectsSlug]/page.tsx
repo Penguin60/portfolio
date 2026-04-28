@@ -1,8 +1,10 @@
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { getProject } from "@/server/queries";
-import RenderedMarkdown from "@/components/renderedmd/renderedmd";
+import { MDXRemote } from "next-mdx-remote/rsc";
+import remarkGfm from "remark-gfm";
+import rehypeHighlight from "rehype-highlight";
+import { mdxComponents } from "@/lib/mdx-components";
 
 export const revalidate = 3600;
 
@@ -20,6 +22,10 @@ export default async function ProjectPage({ params }: PageParams) {
   const projects = await getProject(projectsSlugNumber);
 
   const project = projects[0];
+
+  if (!project) {
+    return <div>Project not found</div>;
+  }
 
   return (
     <main className="bg-zinc-50 dark:bg-zinc-950 text-black dark:text-white flex justify-center">
@@ -41,8 +47,17 @@ export default async function ProjectPage({ params }: PageParams) {
             </div>
             <Separator className="my-4" />
           </div>
-          <div>
-            <RenderedMarkdown content={project.extendedDescription} />
+          <div className="prose dark:prose-invert max-w-none pb-12">
+            <MDXRemote
+              source={project.extendedDescription}
+              options={{
+                mdxOptions: {
+                  remarkPlugins: [remarkGfm],
+                  rehypePlugins: [rehypeHighlight],
+                },
+              }}
+              components={mdxComponents}
+            />
           </div>
         </div>
       </div>

@@ -18,7 +18,7 @@ export default function AdminRootLayout({
 }>) {
   return (
     <html lang="en" className="h-full" suppressHydrationWarning>
-      <body className={`flex flex-col h-screen ${inter.className}`}>
+      <body className={`flex flex-col h-screen bg-zinc-50 dark:bg-zinc-950 text-black dark:text-white ${inter.className}`}>
         <NextAuthSessionProvider>
           {children}
           <Toaster />

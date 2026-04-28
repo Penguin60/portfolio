@@ -3,8 +3,7 @@ import { getMdxContent } from "@/lib/mdx";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import rehypeHighlight from "rehype-highlight";
 import remarkGfm from "remark-gfm";
-import { CodeBlock } from "@/components/mdx/codeblock";
-import { Callout, StatCard, SimpleChart } from "@/components/mdx/widgets";
+import { mdxComponents } from "@/lib/mdx-components";
 
 export const revalidate = 3600;
 
@@ -12,22 +11,6 @@ type PageParams = {
   params: Promise<{
     blogsSlug: string;
   }>;
-};
-
-const components = {
-  Callout,
-  StatCard,
-  SimpleChart,
-  code: (props: any) => {
-    // If it's inline code (no language class)
-    if (!props.className) {
-      return (
-        <code className="bg-zinc-100 dark:bg-zinc-800 rounded px-1 py-0.5 text-pink-500 dark:text-pink-400 font-mono text-sm" {...props} />
-      );
-    }
-    return <CodeBlock {...props} />;
-  },
-  pre: (props: any) => <>{props.children}</>, // Strip the outer pre tag
 };
 
 export default async function BlogPage({ params }: PageParams) {
@@ -75,7 +58,7 @@ export default async function BlogPage({ params }: PageParams) {
                 rehypePlugins: [rehypeHighlight],
               },
             }}
-            components={components}
+            components={mdxComponents}
           />
         </div>
       </div>
