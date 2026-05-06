@@ -1,10 +1,17 @@
 import { CodeBlock } from "@/components/mdx/codeblock";
 import { Callout, StatCard, SimpleChart } from "@/components/mdx/widgets";
+import { MdxImage } from "@/components/mdx/mdx-image";
+import { Collage } from "@/components/mdx/collage";
 
 export const mdxComponents = {
   Callout,
   StatCard,
   SimpleChart,
+  MdxImage,
+  Collage,
+  img: (props: any) => (
+    <MdxImage src={props.src ?? ""} alt={props.alt} />
+  ),
   code: (props: any) => {
     if (!props.className) {
       return (

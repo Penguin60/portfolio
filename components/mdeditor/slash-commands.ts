@@ -106,6 +106,23 @@ export const SLASH_COMMANDS: SlashCommand[] = [
     insert: "---",
   },
   {
+    id: "mdximage",
+    label: "Image (with caption)",
+    hint: "<MdxImage src caption />",
+    group: "component",
+    keywords: ["image", "picture", "photo", "caption", "lightbox"],
+    insert: "<MdxImage src=\"${1:url}\" caption=\"${2:Caption}\" maxWidth=\"${3:100%}\" />",
+  },
+  {
+    id: "collage",
+    label: "Collage",
+    hint: "<Collage>…</Collage>",
+    group: "component",
+    keywords: ["collage", "gallery", "bento", "grid", "images"],
+    insert:
+      "<Collage>\n  <MdxImage src=\"${1:url}\" caption=\"${2:}\" />\n  <MdxImage src=\"${3:url}\" caption=\"${4:}\" />\n  <MdxImage src=\"${5:url}\" caption=\"${6:}\" />\n</Collage>",
+  },
+  {
     id: "callout",
     label: "Callout",
     hint: "<Callout type=\"info\">",
