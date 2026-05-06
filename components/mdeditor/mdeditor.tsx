@@ -42,6 +42,7 @@ import {
   Save,
 } from "lucide-react";
 import { uploadBlob } from "@/server/actions";
+import { compressImage } from "@/lib/compress-image";
 import { SLASH_COMMANDS, fillSnippet, type SlashCommand } from "./slash-commands";
 import { MdxPreview } from "./preview";
 
@@ -231,13 +232,16 @@ export function MarkdownEditor({
   const uploadAndInsertRef = useRef<(file: File) => void>(() => {});
   uploadAndInsertRef.current = async (file: File) => {
     try {
+      const prepared = file.type.startsWith("image/")
+        ? await compressImage(file)
+        : file;
       const formData = new FormData();
-      formData.append("file", file);
+      formData.append("file", prepared);
       const data = await uploadBlob(formData, blobPath);
       if (!data?.url) throw new Error("Upload failed");
       const v = view();
       if (!v) return;
-      const insert = `![${file.name}](${data.url})`;
+      const insert = `![${prepared.name}](${data.url})`;
       const { from, to } = v.state.selection.main;
       v.dispatch({
         changes: { from, to, insert },
