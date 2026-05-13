@@ -10,7 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-export const revalidate = 3600;
+export const revalidate = 60;
 
 export default async function Home() {
   const [blogsData, projectsData, readingData, watchingData, developingData] = await Promise.all([
