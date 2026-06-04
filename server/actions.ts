@@ -9,6 +9,20 @@ import type { MDXRemoteSerializeResult } from "next-mdx-remote";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
 
+export async function getPenguinCount(): Promise<number> {
+  await db
+    .insert(penguinCounterTable)
+    .values({ id: 1, count: 0 })
+    .onConflictDoNothing();
+
+  const [row] = await db
+    .select({ count: penguinCounterTable.count })
+    .from(penguinCounterTable)
+    .where(eq(penguinCounterTable.id, 1));
+
+  return row?.count ?? 0;
+}
+
 export async function incrementPenguinCount(): Promise<number> {
   await db
     .insert(penguinCounterTable)

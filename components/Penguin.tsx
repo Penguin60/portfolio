@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './Penguin.css';
 import Image from 'next/image';
-import { incrementPenguinCount } from '@/server/actions';
+import { incrementPenguinCount, getPenguinCount } from '@/server/actions';
 
 type Popup = { id: number; value: number; x: number; y: number; drift: number };
 
@@ -12,6 +12,7 @@ const Penguin: React.FC = () => {
   const [isMoving, setIsMoving] = useState(false);
   const [popups, setPopups] = useState<Popup[]>([]);
   const popupIdRef = useRef(0);
+  const localCountRef = useRef<number | null>(null);
 
   useEffect(() => {
     const penguin = document.getElementById('penguin');
@@ -26,6 +27,9 @@ const Penguin: React.FC = () => {
       penguin.style.top = `${initialPosition.y}px`;
       setLastPosition(initialPosition);
     }
+    getPenguinCount().then((count) => {
+      localCountRef.current = count;
+    });
   }, []);
 
   const movePenguin = () => {
@@ -42,15 +46,27 @@ const Penguin: React.FC = () => {
 
       const drift = Math.random() * 2 - 1;
 
-      incrementPenguinCount()
-        .then((newCount) => {
-          const id = ++popupIdRef.current;
-          setPopups((prev) => [...prev, { id, value: newCount, x: spawnX, y: spawnY, drift }]);
-          setTimeout(() => {
-            setPopups((prev) => prev.filter((p) => p.id !== id));
-          }, 1500);
-        })
-        .catch(() => {});
+      if (localCountRef.current !== null) {
+        localCountRef.current += 1;
+        const optimisticCount = localCountRef.current;
+        const id = ++popupIdRef.current;
+        setPopups((prev) => [...prev, { id, value: optimisticCount, x: spawnX, y: spawnY, drift }]);
+        setTimeout(() => {
+          setPopups((prev) => prev.filter((p) => p.id !== id));
+        }, 1500);
+        incrementPenguinCount();
+      } else {
+        incrementPenguinCount()
+          .then((newCount) => {
+            localCountRef.current = newCount;
+            const id = ++popupIdRef.current;
+            setPopups((prev) => [...prev, { id, value: newCount, x: spawnX, y: spawnY, drift }]);
+            setTimeout(() => {
+              setPopups((prev) => prev.filter((p) => p.id !== id));
+            }, 1500);
+          })
+          .catch(() => {});
+      }
 
       const windowWidth = window.innerWidth;
       const windowHeight = window.innerHeight;
