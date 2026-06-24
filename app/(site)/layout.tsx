@@ -24,7 +24,7 @@ export default function SiteLayout({
         <link
           rel="preload"
           as="image"
-          href="/profile.jpeg"
+          href="/profile.png"
           fetchPriority="high"
         />
       </head>

@@ -2,12 +2,6 @@ import ClientPenguin from "@/components/clientpenguin";
 import { Separator } from "@/components/ui/separator";
 import { getLatestBlogs, getLatestProjects } from "@/server/queries";
 import Link from "next/link";
-import {
-  EnvelopeClosedIcon,
-  GitHubLogoIcon,
-  LinkedInLogoIcon,
-} from "@radix-ui/react-icons";
-import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export const revalidate = 60;
@@ -71,45 +65,42 @@ export default async function Home() {
         className="w-full flex mx-4"
       >
         <div className="flex flex-col w-full h-full">
-          <div className="flex items-center">
-            <div>
-              <p className="text-lg">
-                <strong>Hey there</strong>, I&apos;m <strong>Radean</strong>
+          <div className="flex items-start gap-6">
+            <div className="flex-1">
+              <p className="text-sm">
+                I&apos;m an 11th grade IB student interested in programming, robotics and design.
               </p>
-              <div className="flex items-center mt-4">
-                <Button asChild variant="ghost" size="icon">
+              <p className="mt-2 text-sm">
+                I love learning, experimenting and seeing the things I build come to life!
+              </p>
+              <p className="mt-4 text-sm">Recently I&apos;ve been:</p>
+              <ul className="mt-2 space-y-1 text-sm list-disc list-inside marker:text-zinc-400">
+                <li>
+                  web/tech @
                   <a
-                    href="https://www.linkedin.com/in/radean-rashed-7aa621362"
-                    aria-label="LinkedIn"
+                    href="https://jamhacks.ca"
+                    className="font-medium underline underline-offset-4"
                   >
-                    <LinkedInLogoIcon />
+                    JAMHacks
                   </a>
-                </Button>
-                <Separator orientation="vertical" className="h-4 mx-2" />
-                <Button asChild variant="ghost" size="icon">
-                  <a href="https://github.com/Penguin60" aria-label="GitHub">
-                    <GitHubLogoIcon />
+                  , Canada&apos;s largest high school hackathon
+                </li>
+                <li>
+                  building software @
+                  <a
+                    href="https://hackcanada.org"
+                    className="font-medium underline underline-offset-4"
+                  >
+                    Hack Canada
                   </a>
-                </Button>
-                <Separator orientation="vertical" className="h-4 mx-2" />
-                <Button asChild variant="ghost" size="icon">
-                  <a href="mailto:radean.rashed@gmail.com" aria-label="Email">
-                    <EnvelopeClosedIcon />
-                  </a>
-                </Button>
-              </div>
+                </li>
+              </ul>
             </div>
-            <Avatar className="ml-auto w-16 h-16">
-              <AvatarImage src="/profile.jpeg" alt="Radean's Avatar" />
+            <Avatar className="w-24 h-24 shrink-0">
+              <AvatarImage src="/profile.png" alt="Radean's Avatar" className="grayscale" />
               <AvatarFallback>RN</AvatarFallback>
             </Avatar>
           </div>
-          <p className="mt-4 text-sm">
-            I&apos;m an 11th grade IB student interested in programming, robotics and design.
-          </p>
-          <p className="mt-2 text-sm">
-            I love learning, experimenting and seeing the things I build come to life!
-          </p>
           <h1 className="text-md font-bold text-zinc-400 mt-8">Latest</h1>
           <Separator className="my-2" />
           {latestItems.map((item) => (
@@ -201,6 +192,28 @@ export default async function Home() {
           </div>
           <div className="hidden sm:block">
             <ClientPenguin />
+          </div>
+          <div className="flex items-center justify-between mt-12 text-sm font-medium text-zinc-600 dark:text-zinc-400">
+            <div className="space-x-6">
+              <a
+                href="https://www.linkedin.com/in/radean-rashed-7aa621362"
+                className="hover:underline transition-all underline-offset-4"
+              >
+                LinkedIn
+              </a>
+              <a
+                href="https://github.com/Penguin60"
+                className="hover:underline transition-all underline-offset-4"
+              >
+                GitHub
+              </a>
+            </div>
+            <a
+              href="mailto:radean.rashed@gmail.com"
+              className="hover:underline transition-all underline-offset-4"
+            >
+              radean.rashed [at] gmail [dot] com
+            </a>
           </div>
         </div>
       </div>
