@@ -65,8 +65,12 @@ export default async function Home() {
         className="w-full flex mx-4"
       >
         <div className="flex flex-col w-full h-full">
-          <div className="flex items-start gap-6">
-            <div className="flex-1">
+          <div className="sm:flex sm:items-start sm:gap-6">
+            <Avatar className="w-20 h-20 sm:w-24 sm:h-24 shrink-0 float-right ml-4 mb-2 sm:float-none sm:ml-0 sm:mb-0 sm:order-2">
+              <AvatarImage src="/profile.png" alt="Radean's Avatar" className="grayscale" />
+              <AvatarFallback>RN</AvatarFallback>
+            </Avatar>
+            <div className="sm:flex-1 sm:order-1">
               <p className="text-sm">
                 I&apos;m an 11th grade IB student interested in programming, robotics and design.
               </p>
@@ -96,10 +100,6 @@ export default async function Home() {
                 </li>
               </ul>
             </div>
-            <Avatar className="w-24 h-24 shrink-0">
-              <AvatarImage src="/profile.png" alt="Radean's Avatar" className="grayscale" />
-              <AvatarFallback>RN</AvatarFallback>
-            </Avatar>
           </div>
           <h1 className="text-md font-bold text-zinc-400 mt-8">Latest</h1>
           <Separator className="my-2" />
@@ -193,8 +193,8 @@ export default async function Home() {
           <div className="hidden sm:block">
             <ClientPenguin />
           </div>
-          <div className="flex items-center justify-between mt-12 text-sm font-medium text-zinc-600 dark:text-zinc-400">
-            <div className="space-x-6">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between mt-12 text-xs sm:text-sm font-medium text-zinc-600 dark:text-zinc-400">
+            <div className="space-x-4 sm:space-x-6">
               <a
                 href="https://www.linkedin.com/in/radean-rashed-7aa621362"
                 className="hover:underline transition-all underline-offset-4"
