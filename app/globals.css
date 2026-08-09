@@ -14,25 +14,38 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
-    --primary: 240 5.9% 10%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
+    --th-white: 44 38% 97%;
+    --th-50: 44 33% 94%;
+    --th-100: 42 26% 90%;
+    --th-200: 40 20% 84%;
+    --th-300: 34 15% 68%;
+    --th-400: 30 15% 52%;
+    --th-500: 28 16% 43%;
+    --th-600: 26 18% 35%;
+    --th-700: 25 20% 28%;
+    --th-800: 25 22% 22%;
+    --th-900: 25 22% 18%;
+    --th-950: 25 25% 13%;
+    --th-black: 25 22% 18%;
+    --background: 44 33% 94%;
+    --foreground: 25 22% 18%;
+    --card: 44 38% 97%;
+    --card-foreground: 25 22% 18%;
+    --popover: 44 38% 97%;
+    --popover-foreground: 25 22% 18%;
+    --primary: 25 22% 18%;
+    --primary-foreground: 44 38% 97%;
+    --secondary: 42 26% 90%;
+    --secondary-foreground: 25 22% 18%;
+    --muted: 42 26% 90%;
+    --muted-foreground: 30 15% 52%;
+    --accent: 42 26% 90%;
+    --accent-foreground: 25 22% 18%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 240 5.9% 10%;
+    --border: 40 20% 84%;
+    --input: 40 20% 84%;
+    --ring: 25 22% 18%;
     --radius: 0.5rem;
     --chart-1: 12 76% 61%;
     --chart-2: 173 58% 39%;
@@ -42,31 +55,84 @@
   }
 
   .dark {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 240 5.9% 10%;
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
+    --th-white: 30 3% 98%;
+    --th-50: 30 3% 96%;
+    --th-100: 30 3% 89%;
+    --th-200: 30 3% 79%;
+    --th-300: 30 3% 68%;
+    --th-400: 30 3% 57%;
+    --th-500: 30 2% 45%;
+    --th-600: 20 4% 34%;
+    --th-700: 20 7% 25%;
+    --th-800: 18 11% 15%;
+    --th-900: 18 12% 11%;
+    --th-950: 16 13% 7%;
+    --th-black: 15 15% 5%;
+    --background: 16 13% 7%;
+    --foreground: 30 3% 96%;
+    --card: 18 12% 11%;
+    --card-foreground: 30 3% 96%;
+    --popover: 16 13% 7%;
+    --popover-foreground: 30 3% 96%;
+    --primary: 30 3% 96%;
+    --primary-foreground: 18 12% 11%;
+    --secondary: 18 11% 15%;
+    --secondary-foreground: 30 3% 96%;
+    --muted: 18 11% 15%;
+    --muted-foreground: 30 3% 68%;
+    --accent: 18 11% 15%;
+    --accent-foreground: 30 3% 96%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 240 4.9% 83.9%;
+    --border: 18 11% 15%;
+    --input: 18 11% 15%;
+    --ring: 30 3% 68%;
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
   }
+}
+
+.prose {
+  --tw-prose-body: hsl(var(--th-800));
+  --tw-prose-headings: hsl(var(--th-950));
+  --tw-prose-lead: hsl(var(--th-700));
+  --tw-prose-links: hsl(var(--th-950));
+  --tw-prose-bold: hsl(var(--th-950));
+  --tw-prose-counters: hsl(var(--th-500));
+  --tw-prose-bullets: hsl(var(--th-300));
+  --tw-prose-hr: hsl(var(--th-200));
+  --tw-prose-quotes: hsl(var(--th-900));
+  --tw-prose-quote-borders: hsl(var(--th-200));
+  --tw-prose-captions: hsl(var(--th-500));
+  --tw-prose-kbd: hsl(var(--th-950));
+  --tw-prose-code: hsl(var(--th-950));
+  --tw-prose-pre-code: hsl(var(--th-200));
+  --tw-prose-pre-bg: hsl(var(--th-900));
+  --tw-prose-th-borders: hsl(var(--th-300));
+  --tw-prose-td-borders: hsl(var(--th-200));
+}
+
+.dark .prose {
+  --tw-prose-body: hsl(var(--th-200));
+  --tw-prose-headings: hsl(var(--th-50));
+  --tw-prose-lead: hsl(var(--th-300));
+  --tw-prose-links: hsl(var(--th-50));
+  --tw-prose-bold: hsl(var(--th-50));
+  --tw-prose-counters: hsl(var(--th-400));
+  --tw-prose-bullets: hsl(var(--th-600));
+  --tw-prose-hr: hsl(var(--th-700));
+  --tw-prose-quotes: hsl(var(--th-100));
+  --tw-prose-quote-borders: hsl(var(--th-700));
+  --tw-prose-captions: hsl(var(--th-400));
+  --tw-prose-kbd: hsl(var(--th-50));
+  --tw-prose-code: hsl(var(--th-50));
+  --tw-prose-pre-code: hsl(var(--th-200));
+  --tw-prose-pre-bg: hsl(var(--th-900));
+  --tw-prose-th-borders: hsl(var(--th-600));
+  --tw-prose-td-borders: hsl(var(--th-700));
 }
 
 /* Fix for prose pre backgrounds when using highlight.js */
@@ -83,31 +149,80 @@
 
 /* Catppuccin Theme Variables */
 :root {
-  --ctp-text: #4c4f69;
+  --ctp-text: #43302b;
   --ctp-mauve: #8839ef;
   --ctp-green: #40a02b;
   --ctp-blue: #1e66f5;
   --ctp-peach: #fe640b;
   --ctp-yellow: #df8e1d;
-  --ctp-overlay0: #9ca0b0;
+  --ctp-overlay0: #82614a;
   --ctp-sky: #04a5e5;
-  --ctp-surface0: #ccd0da;
-  --ctp-surface1: #bcc0cc;
-  --ctp-base: #eff1f5;
+  --ctp-surface0: #e2d4b4;
+  --ctp-surface1: #cdba94;
+  --ctp-base: #f2ead6;
 }
 
 .dark {
-  --ctp-text: #cdd6f4;
+  --ctp-text: #e8e8e8;
   --ctp-mauve: #cba6f7;
   --ctp-green: #a6e3a1;
   --ctp-blue: #89b4fa;
   --ctp-peach: #fab387;
   --ctp-yellow: #f9e2af;
-  --ctp-overlay0: #6c7086;
+  --ctp-overlay0: #8a7f70;
   --ctp-sky: #89dceb;
-  --ctp-surface0: #313244;
-  --ctp-surface1: #45475a;
-  --ctp-base: #1e1e2e;
+  --ctp-surface0: #2a251f;
+  --ctp-surface1: #3a332b;
+  --ctp-base: #16130f;
+}
+
+.site-bg {
+  background-image: radial-gradient(
+      1100px 600px at 50% -10%,
+      hsl(38 60% 50% / 0.18),
+      transparent 70%
+    ),
+    radial-gradient(
+      900px 500px at 85% 110%,
+      hsl(354 45% 34% / 0.29),
+      transparent 65%
+    );
+  background-attachment: fixed;
+}
+
+.site-bg::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.055;
+  background-size: 220px 220px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220' viewBox='0 0 220 220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.55' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)'/%3E%3C/svg%3E");
+  mask-image: radial-gradient(
+      1000px 550px at 50% -12%,
+      rgb(0 0 0 / 0.9),
+      transparent 70%
+    ),
+    radial-gradient(800px 480px at 88% 112%, rgb(0 0 0 / 0.6), transparent 65%);
+}
+
+.dark .site-bg::before {
+  opacity: 0.09;
+}
+
+.dark .site-bg {
+  background-image: radial-gradient(
+      1000px 550px at 50% -12%,
+      hsl(6 55% 30% / 0.35),
+      transparent 70%
+    ),
+    radial-gradient(
+      800px 480px at 88% 112%,
+      hsl(38 50% 40% / 0.14),
+      transparent 65%
+    );
+  background-attachment: fixed;
 }
 
 /* Syntax Highlighting using Catppuccin Variables */
@@ -116,55 +231,55 @@
   color: var(--ctp-text) !important;
 }
 
-.hljs-keyword, 
-.hljs-selector-tag, 
-.hljs-meta .hljs-keyword, 
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-meta .hljs-keyword,
 .hljs-doctag {
   color: var(--ctp-mauve) !important;
 }
 
-.hljs-string, 
-.hljs-regexp, 
-.hljs-addition, 
-.hljs-attribute, 
+.hljs-string,
+.hljs-regexp,
+.hljs-addition,
+.hljs-attribute,
 .hljs-meta .hljs-string {
   color: var(--ctp-green) !important;
 }
 
-.hljs-title, 
-.hljs-title.class_, 
-.hljs-title.function_, 
-.hljs-class .hljs-title, 
+.hljs-title,
+.hljs-title.class_,
+.hljs-title.function_,
+.hljs-class .hljs-title,
 .hljs-function .hljs-title {
   color: var(--ctp-blue) !important;
 }
 
-.hljs-variable, 
-.hljs-template-variable, 
-.hljs-number, 
-.hljs-literal, 
-.hljs-type, 
-.hljs-params, 
+.hljs-variable,
+.hljs-template-variable,
+.hljs-number,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
 .hljs-link {
   color: var(--ctp-peach) !important;
 }
 
-.hljs-built_in, 
-.hljs-symbol, 
-.hljs-bullet, 
+.hljs-built_in,
+.hljs-symbol,
+.hljs-bullet,
 .hljs-subst {
   color: var(--ctp-yellow) !important;
 }
 
-.hljs-comment, 
-.hljs-quote, 
-.hljs-deletion, 
+.hljs-comment,
+.hljs-quote,
+.hljs-deletion,
 .hljs-meta {
   color: var(--ctp-overlay0) !important;
 }
 
-.hljs-section, 
-.hljs-name, 
+.hljs-section,
+.hljs-name,
 .hljs-attr {
   color: var(--ctp-sky) !important;
 }

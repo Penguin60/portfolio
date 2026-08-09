@@ -59,7 +59,7 @@ export default async function Home() {
     .slice(0, 3);
 
   return (
-    <main className="bg-zinc-50 dark:bg-zinc-950 text-black dark:text-white items-start flex justify-start mt-3 pb-12 sm:pb-0">
+    <main className="text-black dark:text-white items-start flex justify-start mt-3 pb-12 sm:pb-0">
       <div
         id="card"
         className="w-full flex mx-4"
@@ -80,7 +80,7 @@ export default async function Home() {
               <p className="mt-4 text-sm">Recently I&apos;ve been:</p>
               <ul className="mt-2 space-y-1 text-sm list-disc list-inside marker:text-zinc-400">
                 <li>
-                  web/tech @
+                  web/tech lead @
                   <a
                     href="https://jamhacks.ca"
                     className="font-medium underline underline-offset-4"
@@ -90,13 +90,14 @@ export default async function Home() {
                   , Canada&apos;s largest high school hackathon
                 </li>
                 <li>
-                  building software @
+                  software @
                   <a
                     href="https://hackcanada.org"
                     className="font-medium underline underline-offset-4"
                   >
                     Hack Canada
                   </a>
+                  , one of the biggest hackathons in the country
                 </li>
               </ul>
             </div>

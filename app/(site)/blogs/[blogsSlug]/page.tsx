@@ -29,7 +29,7 @@ export default async function BlogPage({ params }: PageParams) {
   const mdxSource = await getMdxContent(blog.contentUrl);
 
   return (
-    <main className="bg-zinc-50 dark:bg-zinc-950 text-black dark:text-white flex justify-center">
+    <main className="text-black dark:text-white flex justify-center">
       <div className="w-full max-w-[45rem] flex flex-col mx-4">
         <div>
           <div className="flex justify-between items-center">

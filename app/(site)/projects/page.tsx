@@ -9,7 +9,7 @@ export const revalidate = 3600;
 export default async function Projects() {
   const projects = await getProjects();
   return (
-    <main className="bg-zinc-50 dark:bg-zinc-950 text-black dark:text-white flex justify-start items-start h-full mt-3 pb-4 sm:pb-0">
+    <main className="text-black dark:text-white flex justify-start items-start h-full mt-3 pb-4 sm:pb-0">
       <div className="w-full flex flex-col justify-start mx-4 pb-4">
         {projects.map((project) => (
           <div

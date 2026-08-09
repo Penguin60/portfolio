@@ -2,10 +2,10 @@ import Link from "next/link";
 
 function Navbar() {
   return (
-    <div className="bg-zinc-50 dark:bg-zinc-950 text-black dark:text-white m-0 p-0 items-start flex mx-4">
+    <div className="text-black dark:text-white m-0 p-0 items-start flex mx-4">
       <div className="w-full h-16 flex flex-col justify-center mt-5">
         <div className="flex items-center">
-          <Link href="/" className="text-lg font-semibold tracking-tight text-black dark:text-white hover:underline transition-all underline-offset-4">
+          <Link href="/" className="text-lg font-semibold tracking-tight text-zinc-800 dark:text-white hover:underline transition-all underline-offset-4">
             Radean
           </Link>
           <div className="ml-auto space-x-6">

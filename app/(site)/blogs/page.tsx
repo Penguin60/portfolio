@@ -9,7 +9,7 @@ export const revalidate = 3600;
 export default async function Blogs() {
   const blogs = await getBlogs();
   return (
-    <main className="bg-zinc-50 dark:bg-zinc-950 text-black dark:text-white flex justify-start items-start mt-3 pb-4 sm:pb-0 px-4">
+    <main className="text-black dark:text-white flex justify-start items-start mt-3 pb-4 sm:pb-0 px-4">
       <div className="w-full flex flex-col justify-start pb-4">
         {blogs.map((blog, idx) => (
           <div

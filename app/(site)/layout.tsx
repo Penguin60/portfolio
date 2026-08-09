@@ -29,7 +29,7 @@ export default function SiteLayout({
         />
       </head>
       <body
-        className={`flex flex-col bg-zinc-50 dark:bg-zinc-950 h-screen ${inter.className} overflow-y-auto [&::-webkit-scrollbar]:w-2
+        className={`site-bg flex flex-col bg-zinc-50 dark:bg-zinc-950 h-screen ${inter.className} overflow-y-auto [&::-webkit-scrollbar]:w-2
   [&::-webkit-scrollbar-track]:bg-gray-100
   [&::-webkit-scrollbar-thumb]:bg-gray-300
   dark:[&::-webkit-scrollbar-track]:bg-neutral-700
