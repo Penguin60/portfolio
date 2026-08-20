@@ -1,7 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
-import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
 import { useTheme } from "next-themes";
 import { incrementPenguinCount, getPenguinCount } from "@/server/actions";
 import { Streetcar, Tgv } from "./train-art";
@@ -24,8 +23,6 @@ const TGV_ROUTES = [
   ["2438", "STRASBOURG"],
 ];
 
-const SLOTS = [16, 34, 62, 80];
-
 const pick = <T,>(list: T[], not?: T): T => {
   const pool = list.filter((v) => v !== not);
   return pool[Math.floor(Math.random() * pool.length)];
@@ -35,7 +32,6 @@ type Count = { id: number; value: number; x: number; y: number; drift: number };
 
 export default function Train() {
   const vehRef = useRef<HTMLDivElement>(null);
-  const slotRef = useRef<HTMLDivElement>(null);
   const audioRef = useRef<AudioContext | null>(null);
   const totalRef = useRef<number | null>(null);
   const countIdRef = useRef(0);
@@ -51,9 +47,6 @@ export default function Train() {
   const [moving, setMoving] = useState(false);
   const [open, setOpen] = useState(false);
   const [flip, setFlip] = useState(false);
-  const [slot, setSlot] = useState(SLOTS[0]);
-  const [diving, setDiving] = useState(false);
-  const [popping, setPopping] = useState(false);
   const [counts, setCounts] = useState<Count[]>([]);
 
   useEffect(() => {
@@ -94,7 +87,6 @@ export default function Train() {
         const offRight = window.innerWidth + 80;
 
         setRoute(pick(themeRef.current === "dark" ? TGV_ROUTES : STREETCAR_ROUTES));
-        setSlot((s) => pick(SLOTS, s));
         setFlip(dir < 0);
         place(dir > 0 ? offLeft : offRight);
         void veh.offsetWidth;
@@ -138,7 +130,7 @@ export default function Train() {
     };
   }, []);
 
-  const ring = useCallback(() => {
+  const ring = (event: React.MouseEvent) => {
     const ctx =
       audioRef.current ??
       (audioRef.current = new (window.AudioContext ||
@@ -170,17 +162,8 @@ export default function Train() {
 
     setBanner("DING DING");
     setTimeout(() => setBanner(null), 1500);
-  }, []);
 
-  const dive = (event: React.MouseEvent) => {
-    event.stopPropagation();
-    if (diving || popping) return;
-
-    const rect = slotRef.current?.getBoundingClientRect();
-    const spawn = {
-      x: rect ? rect.left + rect.width / 2 : window.innerWidth / 2,
-      y: rect ? rect.top : window.innerHeight / 2,
-    };
+    const spawn = { x: event.clientX, y: event.clientY };
     const show = (value: number) => {
       const id = ++countIdRef.current;
       setCounts((prev) => [
@@ -199,14 +182,6 @@ export default function Train() {
         show(n);
       });
     }
-
-    setDiving(true);
-    setTimeout(() => {
-      setSlot((s) => pick(SLOTS, s));
-      setPopping(true);
-      setDiving(false);
-      setTimeout(() => setPopping(false), 520);
-    }, 380);
   };
 
   const sign = banner ?? route[1];
@@ -257,15 +232,6 @@ export default function Train() {
         >
           <Tgv sign={sign} />
         </svg>
-
-        <div
-          ref={slotRef}
-          className={`tr-slot${diving ? " diving" : ""}${popping ? " popping" : ""}`}
-          style={{ left: `${slot}%` }}
-          onClick={dive}
-        >
-          <Image src="/penguin.png" alt="" width={160} height={160} priority />
-        </div>
       </div>
 
       {counts.map((c) => (
