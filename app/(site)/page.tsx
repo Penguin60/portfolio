@@ -1,4 +1,4 @@
-import ClientPenguin from "@/components/clientpenguin";
+import Train from "@/components/train-client";
 import { Separator } from "@/components/ui/separator";
 import { getLatestBlogs, getLatestProjects } from "@/server/queries";
 import Link from "next/link";
@@ -203,9 +203,6 @@ export default async function Home() {
               <h3 className="text-right min-w-fit text-sm">{developingData}</h3>
             </div>
           </div>
-          <div className="hidden sm:block">
-            <ClientPenguin />
-          </div>
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between mt-12 text-xs sm:text-sm font-medium text-zinc-600 dark:text-zinc-400">
             <div className="space-x-4 sm:space-x-6">
               <a
@@ -228,6 +225,7 @@ export default async function Home() {
               radean.rashed [at] gmail [dot] com
             </a>
           </div>
+          <Train />
         </div>
       </div>
     </main>

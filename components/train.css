@@ -1,0 +1,270 @@
+.train-line {
+  --tr-body: #c9241c;
+  --tr-stripe: #ffffff;
+  --tr-glass: #171717;
+  --tr-roof: #4a423a;
+  --tr-roofkit: #6b6259;
+  --tr-door: #131313;
+  --tr-doorway: #080808;
+  --tr-doorframe: #322e29;
+  --tr-doortrim: #e8c33a;
+  --tr-bellows: #0d0d0d;
+  --tr-dark: #2a2622;
+  --tr-under: #1a1714;
+  --tr-wheel: #2a2622;
+  --tr-hub: #6b6259;
+  --tr-pax: #8d8478;
+  --tr-lamp: #fff4d6;
+  --tr-sign: #0b0a09;
+  --tr-signtext: #ffb02e;
+  --tr-mark: #c9241c;
+  --tr-rail: #a89a84;
+  --tr-tie: #8c7d67;
+  --tr-pole: #8c7d67;
+  --tr-flag: #c9241c;
+  --tr-flagtext: #ffffff;
+
+  --train-w: clamp(250px, 38vw, 480px);
+  --stop-x: min(calc(52vw + var(--train-w) / 2 + 24px), calc(100vw - 64px));
+
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: calc(var(--train-w) * 130 / 600);
+  z-index: 20;
+  pointer-events: none;
+}
+
+.dark .train-line {
+  --tr-body: #f0eeea;
+  --tr-stripe: #f0eeea;
+  --tr-glass: #14120f;
+  --tr-roof: #c9c6c0;
+  --tr-roofkit: #aeaaa3;
+  --tr-door: #101010;
+  --tr-doorway: #060606;
+  --tr-doorframe: #3a3630;
+  --tr-doortrim: #e8c33a;
+  --tr-bellows: #0d0d0d;
+  --tr-dark: #4a453f;
+  --tr-under: #26221e;
+  --tr-wheel: #33302b;
+  --tr-hub: #6f675e;
+  --tr-pax: #6d7f96;
+  --tr-lamp: #fffdf2;
+  --tr-sign: #0a0908;
+  --tr-signtext: #dfe8ff;
+  --tr-mark: #c0392b;
+  --tr-rail: #4a443d;
+  --tr-tie: #3a352f;
+  --tr-pole: #4a443d;
+  --tr-flag: #c0392b;
+  --tr-flagtext: #f4f1ea;
+}
+
+.train-track {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 1.4s ease;
+}
+
+.train-line[data-active="true"] .train-track {
+  opacity: 1;
+}
+
+.train-rail {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 3px;
+  height: 2px;
+  background: var(--tr-rail);
+  opacity: 0.7;
+}
+
+.train-ties {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  opacity: 0.4;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--tr-tie) 0 9px,
+    transparent 9px 27px
+  );
+}
+
+.train-stop {
+  position: absolute;
+  bottom: 5px;
+  left: var(--stop-x);
+  width: clamp(14px, calc(var(--train-w) * 24 / 600), 20px);
+  height: auto;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.train-stop:active {
+  opacity: 0.6;
+}
+
+.train-veh {
+  position: absolute;
+  bottom: 5px;
+  left: 0;
+  width: var(--train-w);
+  height: auto;
+  pointer-events: auto;
+  cursor: pointer;
+  will-change: transform;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.tr-day,
+.tr-night {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.tr-night,
+.dark .tr-day {
+  display: none;
+}
+
+.dark .tr-night {
+  display: block;
+}
+
+.train-line svg.flip {
+  scale: -1 1;
+}
+
+.train-line svg.flip .tr-signtext {
+  transform: scaleX(-1);
+  transform-box: view-box;
+}
+
+.tr-leaf-l,
+.tr-leaf-r {
+  transition: transform 850ms cubic-bezier(0.45, 0.05, 0.2, 1);
+}
+
+.doors-open .tr-leaf-l {
+  transform: translateX(calc(-1 * var(--travel, 12px)));
+}
+
+.doors-open .tr-leaf-r {
+  transform: translateX(var(--travel, 12px));
+}
+
+.tr-wheel {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.moving .tr-wheel {
+  animation: tr-roll 0.55s linear infinite;
+}
+
+@keyframes tr-roll {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.tr-glow {
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  filter: blur(3px);
+}
+
+.moving .tr-glow,
+.doors-open .tr-glow {
+  opacity: 0.5;
+}
+
+.tr-pax {
+  transform-box: fill-box;
+}
+
+.moving .tr-pax {
+  animation: tr-bob 1.2s ease-in-out infinite alternate;
+}
+
+@keyframes tr-bob {
+  to {
+    transform: translateY(0.8px);
+  }
+}
+
+.tr-slot {
+  position: absolute;
+  bottom: 60%;
+  width: calc(var(--train-w) * 0.088);
+  height: calc(var(--train-w) * 0.088);
+  overflow: hidden;
+  pointer-events: auto;
+  cursor: pointer;
+  transform: translateX(-50%);
+}
+
+.dark .tr-slot {
+  bottom: 57%;
+}
+
+.tr-slot img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  transition: transform 380ms cubic-bezier(0.5, 0, 0.9, 0.4);
+}
+
+.tr-slot.diving img {
+  transform: translateY(105%) scaleY(0.86);
+}
+
+.tr-slot.popping img {
+  transition: transform 520ms cubic-bezier(0.2, 1.5, 0.4, 1);
+}
+
+.tr-count {
+  position: fixed;
+  z-index: 1000;
+  pointer-events: none;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: hsl(var(--th-900));
+  transform: translate(-50%, -50%);
+  animation: tr-count-rise 1.4s ease-out forwards;
+}
+
+.dark .tr-count {
+  color: hsl(var(--th-100));
+}
+
+@keyframes tr-count-rise {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.6);
+  }
+  12% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(calc(-50% + var(--drift) * 42px), -320%) scale(0.95);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .moving .tr-wheel,
+  .moving .tr-pax {
+    animation: none;
+  }
+}
