@@ -57,7 +57,7 @@ export default async function Home() {
 
   const latestItems = [...blogs, ...projects]
     .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
-    .slice(0, 3);
+    .slice(0, 2);
 
   return (
     <main className="text-black dark:text-white items-start flex justify-start mt-3 pb-12 sm:pb-0">
