@@ -9,8 +9,8 @@ export const revalidate = 60;
 export default async function Home() {
   const [blogsData, projectsData, readingData, watchingData, developingData] =
     await Promise.all([
-      getLatestBlogs(3),
-      getLatestProjects(3),
+      getLatestBlogs(2),
+      getLatestProjects(2),
       fetch("https://theca.rrashed.com/v/Penguin60/reading", {
         next: { revalidate },
       })
